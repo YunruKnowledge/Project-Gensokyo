@@ -1,6 +1,6 @@
 
 // https://www.youtube.com/watch?v=eI9idPTT0c4&ab_channel=ChrisCourses
-// now at collision detection.
+// now at collision detection. player
 // 
 // planned things: 
 // Movement for player.
@@ -131,10 +131,21 @@ function animation() {
     })
 
     //enemies
-    enemyArray.forEach((enemy)=> {
+    enemyArray.forEach((enemy, enemyIndex)=> {
         enemy.UpdateAnimation()
+
+        //collision 
+        playerProjectileArray.forEach((projectile, projectileIndex)=> {
+            const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
+            if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
+                setTimeout(() => {
+                    enemyArray.splice(enemyIndex, 1)
+                    playerProjectileArray.splice(projectileIndex, 1)
+                    console.log('console logged!');
+                }, 0);
+            }; 
+        })
     })
-    console.log('console logged!');
 }
 animation()
 
