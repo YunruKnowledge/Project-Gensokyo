@@ -65,8 +65,8 @@ class PlayerProjectile {
     }
     UpdateAnimation() {
         this.drawPlayerProjectile()
-        this.xPosition = this.xPosition + this.velocity.x;
-        this.yPosition = this.yPosition + this.velocity.y;
+        this.xPosition = this.xPosition + this.velocity.x * 6;
+        this.yPosition = this.yPosition + this.velocity.y * 6;
     }
 }
 const playerProjectileArray = [];
@@ -114,34 +114,52 @@ enemySpawn()
 
 
 // Animations - render
+let animationFrame;
 function animation() {
     //render
-    requestAnimationFrame(animation)
+    animationFrame = requestAnimationFrame(animation)
     canvasContext.clearRect(0, 0, canvas.width, canvas.height)
 
     //player
     const hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white')
-    hitboxGlow.drawHitbox()
+    hitboxGlow.drawHitbox();
     const hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon')
-    hitbox.drawHitbox()
+    hitbox.drawHitbox();
 
     //player projectiles
-    playerProjectileArray.forEach((projectile)=> {
+    playerProjectileArray.forEach((projectile, projectileIndex)=> {
         projectile.UpdateAnimation();
+
+        // Removal of bullets off screen
+        if (projectile.xPosition + projectile.circleRadius < 0  ||
+            projectile.xPosition - projectile.circleRadius > canvas.width ||
+            projectile.yPosition + projectile.circleRadius < 0 ||
+            projectile.yPosition - projectile.circleRadius > canvas.height ) {
+            setTimeout(() => {
+                playerProjectileArray.splice(projectileIndex, 1)
+            }, 0);
+        }
     })
 
     //enemies
     enemyArray.forEach((enemy, enemyIndex)=> {
         enemy.UpdateAnimation()
-
-        //collision 
+        
+        //collision for player
+        const collisionDistance = Math.hypot(hitbox.xPosition - enemy.xPosition, hitbox.yPosition - enemy.yPosition)
+        if (collisionDistance - enemy.circleRadius - hitbox.circleRadius < 1) {
+            setTimeout(() => {
+                cancelAnimationFrame(animationFrame)
+            }, 0); 
+        }; 
+        
+        //collision for projectiles
         playerProjectileArray.forEach((projectile, projectileIndex)=> {
             const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
             if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
                 setTimeout(() => {
                     enemyArray.splice(enemyIndex, 1)
                     playerProjectileArray.splice(projectileIndex, 1)
-                    console.log('console logged!');
                 }, 0);
             }; 
         })
@@ -152,7 +170,8 @@ animation()
 
 // EventListeners
 addEventListener('click', (event)=> {
-
+    console.log(playerProjectileArray);
+    
     //bullets
     const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
     const velocity = {
