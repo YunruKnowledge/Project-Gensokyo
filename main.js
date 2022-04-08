@@ -1,21 +1,12 @@
 
-// https://www.youtube.com/watch?v=eI9idPTT0c4&ab_channel=ChrisCourses
-// now at collision detection. player
-// 
-// planned things: 
-// Movement for player.
-// auto shooting for player.
-// enemy revamp into fairies? may not be possible for now
-// HUD / UI
-// potrait aspect ratio
-// Score system?
+
+
 
 // Canvas body
 const canvas = document.querySelector('canvas');
 const canvasContext = canvas.getContext('2d');
 canvas.width = canvasWidthCalculation()
 canvas.height = canvasHeightCalculation()
-canvas.style.border = '1px solid black'
 
 function canvasWidthCalculation() {
     return innerWidth
@@ -43,7 +34,6 @@ class Hitbox {
         canvasContext.fill()
     }
 }
-// might change it
 const HitboxPositionX = canvas.width / 2;
 const HitboxPositionY = canvas.height / 2;
 
@@ -69,7 +59,7 @@ class PlayerProjectile {
         this.yPosition = this.yPosition + this.velocity.y * 6;
     }
 }
-const playerProjectileArray = [];
+let playerProjectileArray = [];
 
 
 // Enemy
@@ -93,40 +83,94 @@ class Enemy {
         this.yPosition = this.yPosition + this.velocity.y;
     }
 }
-const enemyArray = []
+let enemyArray = []
 function enemySpawn() {
     setInterval(() => {
+        console.log('asdsa')
         const radius = Math.random() * (14 - 10) + 14;
         const x = Math.random() * canvas.width;
         const y = -radius;
-        const color = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
+        const color = `hsl(${Math.random()*360}, 75% , 75%)`;
 
         const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+
+        const randomNumGen = (Math.random() * 16);
         const velocity = {
-            x: Math.cos(angle),
-            y: Math.sin(angle)
+            x: Math.cos(angle) * randomNumGen,
+            y: Math.sin(angle) * randomNumGen
         };
 
         enemyArray.push(new Enemy(x, y, radius, color, velocity));
     }, 500);
 }
-enemySpawn()
 
 
-// Animations - render
+// Particles
+class Particle {
+    constructor(x, y, radius, color, velocity) {
+        this.xPosition = x;
+        this.yPosition = y;
+        this.circleRadius = radius;
+        this.color = color;
+        this.velocity = velocity; 
+        this.alpha = 0.5;
+    }
+    drawParticle() {
+        canvasContext.save()
+        canvasContext.globalAlpha = this.alpha; 
+        canvasContext.beginPath();
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = this.color;
+        canvasContext.fill()
+        canvasContext.restore()
+    }
+    UpdateAnimation() {
+        this.drawParticle()
+        this.xPosition = this.xPosition + this.velocity.x;
+        this.yPosition = this.yPosition + this.velocity.y;
+        this.alpha -= 0.01;
+        this.velocity.x *= 0.95;
+        this.velocity.y *= 0.95;
+    }
+}
+let particleArray = []
+
+
+// Score variable
+const scoreCounter = document.querySelector('#scoreNum')
+const scoreEndCounter = document.querySelector('#scoreEndNum')
+let scoreNumber = 0;
+let deaths = 0;
+// Parent elements
+const scoreCounterElement = document.querySelector('.scoreCounter');
+const scoreEndCounterElement = document.querySelector('.endScreen');
+
+
+// Animations/Render
 let animationFrame;
 function animation() {
-    //render
+    // Render
     animationFrame = requestAnimationFrame(animation)
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height)
+    canvasContext.fillStyle = 'rgba(20,20,20,0.25)'
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height)
 
-    //player
-    const hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white')
+    // Player
+    let hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white')
     hitboxGlow.drawHitbox();
-    const hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon')
+    let hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon')
     hitbox.drawHitbox();
-
-    //player projectiles
+    
+    // Particle
+    particleArray.forEach((particle, particleIndex) => {
+        if (particle.alpha <= 0) { 
+            particleArray.splice(particleIndex, 1)
+        } 
+        else {
+            particle.UpdateAnimation()
+        }
+    });
+    
+    // Player projectiles
     playerProjectileArray.forEach((projectile, projectileIndex)=> {
         projectile.UpdateAnimation();
 
@@ -141,43 +185,84 @@ function animation() {
         }
     })
 
-    //enemies
+    // Enemies
     enemyArray.forEach((enemy, enemyIndex)=> {
         enemy.UpdateAnimation()
         
-        //collision for player
+        // Collision for player - Death
         const collisionDistance = Math.hypot(hitbox.xPosition - enemy.xPosition, hitbox.yPosition - enemy.yPosition)
         if (collisionDistance - enemy.circleRadius - hitbox.circleRadius < 1) {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
-            }, 0); 
+
+                scoreEndCounter.innerHTML = parseInt(scoreNumber);
+                scoreCounterElement.style.display = 'none';
+                scoreEndCounterElement.style.display = 'block';
+                deaths++;
+            }, 0);
         }; 
         
-        //collision for projectiles
+        // Collision for projectiles
         playerProjectileArray.forEach((projectile, projectileIndex)=> {
             const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
             if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
+                //particles
+                for (let i = 0; i < 24; i++) {
+                    particleArray.push(new Particle(
+                        projectile.xPosition, 
+                        projectile.yPosition, 
+                        Math.random() * 4, 
+                        enemy.color, 
+                        {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)}));
+                }
+
+                // Removal of projectile and enemy
                 setTimeout(() => {
                     enemyArray.splice(enemyIndex, 1)
                     playerProjectileArray.splice(projectileIndex, 1)
                 }, 0);
+
+                scoreNumber += (10*enemy.circleRadius);
+                scoreCounter.innerHTML = parseInt(scoreNumber);
             }; 
         })
     })
 }
-animation()
 
+
+//Start and Restart function
+function restartGame() {
+    enemyArray = [];
+    particleArray = [];
+    playerProjectileArray = [];
+    hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white');
+    hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon');
+    scoreNumber = 0;
+    scoreEndCounter.innerHTML = parseInt(scoreNumber);
+    scoreCounter.innerHTML = parseInt(scoreNumber);
+
+    animation()
+    if (deaths <= 0) {
+        enemySpawn()
+    }
+    
+    // UI
+    scoreCounterElement.style.display = 'block';
+    scoreEndCounterElement.style.display = 'none';
+}
 
 // EventListeners
-addEventListener('click', (event)=> {
-    console.log(playerProjectileArray);
-    
-    //bullets
+//bullets
+addEventListener('click', (event)=> {    
     const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
     const velocity = {
         x: Math.cos(angle),
         y: Math.sin(angle)
     }
-    playerProjectileArray.push(new PlayerProjectile(canvas.width/2, canvas.height/2, 12, 'blue', velocity))
+    playerProjectileArray.push(new PlayerProjectile(canvas.width/2, canvas.height/2, 12, 'salmon', velocity))
 })
-
+// Start/Restart game
+const restartButton = document.querySelector('.btn');
+restartButton.addEventListener('click', ()=> {
+    restartGame()
+});
