@@ -26,12 +26,16 @@ class Hitbox {
         this.circleRadius = radius;
         this.color = color;
     }
-
     drawHitbox() {
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
         canvasContext.fillStyle = this.color;
         canvasContext.fill()
+    }
+    UpdateAnimation() {
+        this.drawHitbox()
+        this.xPosition = this.xPosition + this.velocity.x * 8;
+        this.yPosition = this.yPosition + this.velocity.y * 8;
     }
 }
 const HitboxPositionX = canvas.width / 2;
@@ -55,8 +59,8 @@ class PlayerProjectile {
     }
     UpdateAnimation() {
         this.drawPlayerProjectile()
-        this.xPosition = this.xPosition + this.velocity.x * 6;
-        this.yPosition = this.yPosition + this.velocity.y * 6;
+        this.xPosition = this.xPosition + this.velocity.x * 8;
+        this.yPosition = this.yPosition + this.velocity.y * 8;
     }
 }
 let playerProjectileArray = [];
@@ -94,7 +98,7 @@ function enemySpawn() {
 
         const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
 
-        const randomNumGen = (Math.random() * 16);
+        const randomNumGen = (Math.random() * 8) + 2;
         const velocity = {
             x: Math.cos(angle) * randomNumGen,
             y: Math.sin(angle) * randomNumGen
