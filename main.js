@@ -90,7 +90,6 @@ class Enemy {
 let enemyArray = []
 function enemySpawn() {
     setInterval(() => {
-        console.log('asdsa')
         const radius = Math.random() * (14 - 10) + 14;
         const x = Math.random() * canvas.width;
         const y = -radius;
@@ -255,18 +254,58 @@ function restartGame() {
     scoreEndCounterElement.style.display = 'none';
 }
 
-// EventListeners
-//bullets
-addEventListener('click', (event)=> {    
+
+// Shooting 
+function playerShoot(event) {
     const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
     const velocity = {
         x: Math.cos(angle),
         y: Math.sin(angle)
     }
     playerProjectileArray.push(new PlayerProjectile(canvas.width/2, canvas.height/2, 12, 'salmon', velocity))
+}
+
+
+// EventListeners
+
+// Mouse
+let mousePosition;
+addEventListener('mousemove', (event)=> {
+    mousePosition = event;
 })
+
+// Bullets
+addEventListener('click', (event)=> {    
+    playerShoot(event)
+})
+
 // Start/Restart game
 const restartButton = document.querySelector('.btn');
 restartButton.addEventListener('click', ()=> {
     restartGame()
 });
+
+// Keyboard/Movement
+let keyArray = [];
+onkeydown = onkeyup = function(event) {
+    event = event;
+    keyArray[event.code] = event.type == 'keydown';
+
+    if (keyArray['KeyD']) {
+    }
+
+    if (keyArray['KeyW']) {
+    }
+
+    if (keyArray['KeyA']) {
+    }
+
+    if (keyArray['KeyS']) {
+    }
+
+    if (keyArray['Space']) {
+        playerShoot(mousePosition)
+    }
+    console.log(event.code)
+    console.log(keyArray)
+}
