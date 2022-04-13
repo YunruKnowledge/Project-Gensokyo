@@ -124,7 +124,7 @@ function enemySpawn() {
         };
 
         enemyArray.push(new Enemy(x, y, radius, color, velocity));
-    }, 200);
+    }, 500);
 }
 
 
@@ -216,7 +216,7 @@ function animation() {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
 
-                deaths++;
+                deaths++; // Could be used later as a death counter
                 // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
                 scoreCounterElement.style.display = 'none';
@@ -275,6 +275,10 @@ function restartGame() {
     // UI
     scoreCounterElement.style.display = 'block';
     scoreEndCounterElement.style.display = 'none';
+
+    let startAudio = new Audio();
+    startAudio.src = './PC Computer - Touhou Koumakyou The Embodiment of Scarlet Devil - Sound Effects\pldead00.wav';
+    startAudio.play();
 }
 
 
