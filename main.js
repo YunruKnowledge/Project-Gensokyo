@@ -214,8 +214,23 @@ function animation() {
     enemyArray.forEach((enemy, enemyIndex)=> {
         enemy.UpdateAnimation()
         
-        // Collision for player - Death
+        // Graze - (Gives points when player is close to enemy)
         const collisionDistance = Math.hypot(playerHitbox.xPosition - enemy.xPosition, playerHitbox.yPosition - enemy.yPosition)
+        if (collisionDistance - enemy.circleRadius - playerHitbox.circleRadius <= 30) { 
+            scoreNumber += (Math.abs(enemy.velocity.x) + Math.abs(enemy.velocity.y * 2));
+            scoreCounter.innerHTML = parseInt(scoreNumber);
+            
+            // Audio
+            audioArray.push(new Audio())
+            audioArray.forEach((audio, audioIndex)=> {
+                audio.src = `graze.wav`;
+                audio.volume = '0.05'
+                audio.play()
+                audioArray.splice(audioIndex, 1)
+            });
+        }
+        
+        // Collision for player - Death
         if (collisionDistance - enemy.circleRadius - playerHitbox.circleRadius < 1) {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
@@ -255,8 +270,7 @@ function animation() {
                     audio.volume = '0.25'
                     audio.play()
                     audioArray.splice(audioIndex, 1)
-                })
-                console.log(audioArray)
+                });
                 
                 //particles
                 for (let i = 0; i < 24; i++) {
@@ -409,9 +423,6 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.y = 4;
     }
     
-    
-
-    
-    console.log(event.code)
-    console.log(keyArray)
+    // console.log(event.code)
+    // console.log(keyArray)
 }
