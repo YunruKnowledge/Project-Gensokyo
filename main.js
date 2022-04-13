@@ -198,10 +198,15 @@ function animation() {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
 
+                deaths++;
+                // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
                 scoreCounterElement.style.display = 'none';
                 scoreEndCounterElement.style.display = 'block';
-                deaths++;
+                const scoreEndText = document.querySelector('#endScreenText');
+                scoreEndText.style.display = 'block';
+                const scoreEndBtn = document.querySelector('.btn');
+                scoreEndBtn.innerHTML = 'Restart'
             }, 0);
         }; 
         
