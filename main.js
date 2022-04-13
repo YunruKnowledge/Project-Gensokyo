@@ -227,7 +227,7 @@ function animation() {
                 audioArray.push(new Audio())
                 audioArray.forEach((audio, audioIndex)=> {
                     audio.src = `pldead00.wav`;
-                    audio.volume = '1'
+                    audio.volume = '0.3'
                     audio.play()
                     audioArray.splice(audioIndex, 1)
                 });
@@ -376,6 +376,9 @@ onkeydown = onkeyup = function(event) {
         if (gameStarted === true) {
             playerShoot(mousePosition)
         }
+    }
+    else if (!keyArray['Space']) {
+        // Nothing
     }
 
     if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
