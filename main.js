@@ -18,6 +18,10 @@ function canvasHeightCalculation() {
 }
 
 
+// Audio
+let audioArray = []
+
+
 // Player
 class Hitbox {
     constructor(x, y, velocity) {
@@ -124,7 +128,7 @@ function enemySpawn() {
         };
 
         enemyArray.push(new Enemy(x, y, radius, color, velocity));
-    }, 200);
+    }, 500);
 }
 
 
@@ -216,7 +220,18 @@ function animation() {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
 
-                deaths++;
+                gameStarted = false;
+                deaths++; // Could be used later as a death counter
+
+                // Audio
+                audioArray.push(new Audio())
+                audioArray.forEach((audio, audioIndex)=> {
+                    audio.src = `pldead00.wav`;
+                    audio.volume = '0.3'
+                    audio.play()
+                    audioArray.splice(audioIndex, 1)
+                });
+                
                 // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
                 scoreCounterElement.style.display = 'none';
@@ -232,6 +247,17 @@ function animation() {
         playerProjectileArray.forEach((projectile, projectileIndex)=> {
             const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
             if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
+
+                // Audio
+                audioArray.push(new Audio())
+                audioArray.forEach((audio, audioIndex)=> {
+                    audio.src = `tan00.wav`;
+                    audio.volume = '0.25'
+                    audio.play()
+                    audioArray.splice(audioIndex, 1)
+                })
+                console.log(audioArray)
+                
                 //particles
                 for (let i = 0; i < 24; i++) {
                     particleArray.push(new Particle(
@@ -257,6 +283,7 @@ function animation() {
 
 
 //Start and Restart function
+let gameStarted = false;
 function restartGame() {
     enemyArray = [];
     particleArray = [];
@@ -265,7 +292,7 @@ function restartGame() {
     scoreEndCounter.innerHTML = parseInt(scoreNumber);
     scoreCounter.innerHTML = parseInt(scoreNumber);
     playerHitbox.xPosition = canvas.width/2;
-    playerHitbox.yPosition = canvas.height/2;
+    playerHitbox.yPosition = canvas.height/1.25;
 
     animation()
     if (deaths <= 0) {
@@ -275,6 +302,19 @@ function restartGame() {
     // UI
     scoreCounterElement.style.display = 'block';
     scoreEndCounterElement.style.display = 'none';
+
+    // Audio
+    audioArray.push(new Audio())
+    audioArray.forEach((audio, audioIndex)=> {
+        audio.src = `ok00.wav`;
+        audio.volume = '1'
+        audio.play()
+        audioArray.splice(audioIndex, 1)
+    });
+
+    setTimeout(() => {
+        gameStarted = true;
+    }, 0);
 }
 
 
@@ -286,6 +326,16 @@ function playerShoot(event) {
         y: Math.sin(angle)
     }
     playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))
+
+    // Audio
+    let attackAudioRandom = Math.random()*2 + 1;
+    audioArray.push(new Audio())
+    audioArray.forEach((audio, audioIndex)=> {
+        audio.src = `tan0${parseInt(attackAudioRandom)}.wav`;
+        audio.volume = '0.2'
+        audio.play()
+        audioArray.splice(audioIndex, 1)
+    })
 }
 
 
@@ -298,9 +348,11 @@ addEventListener('mousemove', (event)=> {
 })
 
 // Bullets
-addEventListener('click', (event)=> {    
-    playerShoot(event)
-})
+onmousedown = function(event) {    
+    if (gameStarted === true) {
+        playerShoot(event)
+    }
+}
 
 // Start/Restart game
 const restartButton = document.querySelector('.btn');
@@ -315,27 +367,45 @@ onkeydown = onkeyup = function(event) {
     keyArray[event.code] = event.type == 'keydown';
 
     // Bugged - needs a _if not_ for the rest to function correctly.
-    if (!keyArray['ShiftLeft']) {
+    if (!keyArray['Quote']) {
         playerHitbox.velocity.y = 0;
         playerHitbox.velocity.x = 0;
     }
 
-    if (keyArray['Space']) {
-        playerShoot(mousePosition)
+    if (keyArray['Space']) { 
+        if (gameStarted === true) {
+            playerShoot(mousePosition)
+        }
+    }
+    else if (!keyArray['Space']) {
+        // Nothing
     }
 
-    if (keyArray['KeyD']) {
+    if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
+        playerHitbox.velocity.x = 2;
+    }
+    else if (keyArray['KeyD']) {
         playerHitbox.velocity.x = 4;
     }
-    if (keyArray['KeyW']) {
+
+    if (keyArray['KeyW'] && keyArray['ShiftLeft']) {
+        playerHitbox.velocity.y = -2;
+    }
+    else if (keyArray['KeyW']) {
         playerHitbox.velocity.y = -4;
     }
 
-    if (keyArray['KeyA']) {
+    if (keyArray['KeyA'] && keyArray['ShiftLeft']) {
+        playerHitbox.velocity.x = -2;
+    }
+    else if (keyArray['KeyA']) {
         playerHitbox.velocity.x = -4;
     }
     
-    if (keyArray['KeyS']) {
+    if (keyArray['KeyS'] && keyArray['ShiftLeft']) {
+        playerHitbox.velocity.y = 2;
+    }
+    else if (keyArray['KeyS']) {
         playerHitbox.velocity.y = 4;
     }
     
