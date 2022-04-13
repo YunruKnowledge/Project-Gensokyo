@@ -18,28 +18,48 @@ function canvasHeightCalculation() {
 }
 
 
-// Hitbox - player
+// Player
 class Hitbox {
-    constructor(x, y, radius, color) {
+    constructor(x, y, velocity) {
         this.xPosition = x;
         this.yPosition = y;
-        this.circleRadius = radius;
-        this.color = color;
+        this.velocity = velocity;
+        this.circleRadius = 4;
     }
-    drawHitbox() {
+
+    draw() {
         canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = this.color;
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 2, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = 'white';
+        canvasContext.fill()
+        canvasContext.beginPath();
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 1.5, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = 'salmon';
         canvasContext.fill()
     }
-    UpdateAnimation() {
-        this.drawHitbox()
-        this.xPosition = this.xPosition + this.velocity.x * 8;
-        this.yPosition = this.yPosition + this.velocity.y * 8;
+    update() {
+        this.draw()
+        
+        if (this.yPosition + this.circleRadius + this.velocity.y >= canvas.height) {
+            this.velocity.y = 0; 
+        }
+        if (this.yPosition - this.circleRadius + this.velocity.y <= 0) {
+            this.velocity.y = 0; 
+        }
+        if (this.xPosition + this.circleRadius + this.velocity.x >= canvas.width) {
+            this.velocity.x = 0; 
+        }
+        if (this.xPosition - this.circleRadius + this.velocity.x <= 0) {
+            this.velocity.x = 0; 
+        }
+        else {
+            this.xPosition += this.velocity.x;
+            this.yPosition += this.velocity.y;
+        }
     }
 }
-const HitboxPositionX = canvas.width / 2;
-const HitboxPositionY = canvas.height / 2;
+const playerVelocity = {x:0, y:0} 
+const playerHitbox = new Hitbox(canvas.width / 2,canvas.height / 2, playerVelocity)
 
 
 // Bullets
@@ -59,8 +79,8 @@ class PlayerProjectile {
     }
     UpdateAnimation() {
         this.drawPlayerProjectile()
-        this.xPosition = this.xPosition + this.velocity.x * 8;
-        this.yPosition = this.yPosition + this.velocity.y * 8;
+        this.xPosition = this.xPosition + this.velocity.x * 12;
+        this.yPosition = this.yPosition + this.velocity.y * 12;
     }
 }
 let playerProjectileArray = [];
@@ -95,7 +115,7 @@ function enemySpawn() {
         const y = -radius;
         const color = `hsl(${Math.random()*360}, 75% , 75%)`;
 
-        const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+        const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
 
         const randomNumGen = (Math.random() * 8) + 2;
         const velocity = {
@@ -104,7 +124,7 @@ function enemySpawn() {
         };
 
         enemyArray.push(new Enemy(x, y, radius, color, velocity));
-    }, 500);
+    }, 200);
 }
 
 
@@ -152,17 +172,15 @@ const scoreEndCounterElement = document.querySelector('.endScreen');
 // Animations/Render
 let animationFrame;
 function animation() {
+
     // Render
     animationFrame = requestAnimationFrame(animation)
     canvasContext.fillStyle = 'rgba(20,20,20,0.25)'
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
 
     // Player
-    let hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white')
-    hitboxGlow.drawHitbox();
-    let hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon')
-    hitbox.drawHitbox();
-    
+    playerHitbox.update()
+
     // Particle
     particleArray.forEach((particle, particleIndex) => {
         if (particle.alpha <= 0) { 
@@ -193,8 +211,8 @@ function animation() {
         enemy.UpdateAnimation()
         
         // Collision for player - Death
-        const collisionDistance = Math.hypot(hitbox.xPosition - enemy.xPosition, hitbox.yPosition - enemy.yPosition)
-        if (collisionDistance - enemy.circleRadius - hitbox.circleRadius < 1) {
+        const collisionDistance = Math.hypot(playerHitbox.xPosition - enemy.xPosition, playerHitbox.yPosition - enemy.yPosition)
+        if (collisionDistance - enemy.circleRadius - playerHitbox.circleRadius < 1) {
             setTimeout(() => {
                 cancelAnimationFrame(animationFrame)
 
@@ -243,11 +261,11 @@ function restartGame() {
     enemyArray = [];
     particleArray = [];
     playerProjectileArray = [];
-    hitboxGlow = new Hitbox(HitboxPositionX, HitboxPositionY, 8, 'white');
-    hitbox = new Hitbox(HitboxPositionX, HitboxPositionY, 6, 'salmon');
     scoreNumber = 0;
     scoreEndCounter.innerHTML = parseInt(scoreNumber);
     scoreCounter.innerHTML = parseInt(scoreNumber);
+    playerHitbox.xPosition = canvas.width/2;
+    playerHitbox.yPosition = canvas.height/2;
 
     animation()
     if (deaths <= 0) {
@@ -262,12 +280,12 @@ function restartGame() {
 
 // Shooting 
 function playerShoot(event) {
-    const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2);
+    const angle = Math.atan2(event.clientY - playerHitbox.yPosition, event.clientX - playerHitbox.xPosition);
     const velocity = {
         x: Math.cos(angle),
         y: Math.sin(angle)
     }
-    playerProjectileArray.push(new PlayerProjectile(canvas.width/2, canvas.height/2, 12, 'salmon', velocity))
+    playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))
 }
 
 
@@ -296,21 +314,34 @@ onkeydown = onkeyup = function(event) {
     event = event;
     keyArray[event.code] = event.type == 'keydown';
 
-    if (keyArray['KeyD']) {
-    }
-
-    if (keyArray['KeyW']) {
-    }
-
-    if (keyArray['KeyA']) {
-    }
-
-    if (keyArray['KeyS']) {
+    // Bugged - needs a _if not_ for the rest to function correctly.
+    if (!keyArray['ShiftLeft']) {
+        playerHitbox.velocity.y = 0;
+        playerHitbox.velocity.x = 0;
     }
 
     if (keyArray['Space']) {
         playerShoot(mousePosition)
     }
+
+    if (keyArray['KeyD']) {
+        playerHitbox.velocity.x = 4;
+    }
+    if (keyArray['KeyW']) {
+        playerHitbox.velocity.y = -4;
+    }
+
+    if (keyArray['KeyA']) {
+        playerHitbox.velocity.x = -4;
+    }
+    
+    if (keyArray['KeyS']) {
+        playerHitbox.velocity.y = 4;
+    }
+    
+    
+
+    
     console.log(event.code)
     console.log(keyArray)
 }
