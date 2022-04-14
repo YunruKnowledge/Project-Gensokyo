@@ -113,22 +113,17 @@ class Enemy {
 }
 let enemyArray = []
 function enemySpawn() {
-    setInterval(() => {
-        const radius = Math.random() * (14 - 10) + 14;
-        const x = Math.random() * canvas.width;
-        const y = -radius;
-        const color = `hsl(${Math.random()*360}, 75% , 75%)`;
-
-        const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
-
-        const randomNumGen = (Math.random() * 8) + 2;
-        const velocity = {
-            x: Math.cos(angle) * randomNumGen,
-            y: Math.sin(angle) * randomNumGen
-        };
-
-        enemyArray.push(new Enemy(x, y, radius, color, velocity));
-    }, 500);
+    const radius = Math.random() * (14 - 10) + 14;
+    const x = Math.random() * canvas.width;
+    const y = -radius;
+    const color = `hsl(${Math.random()*360}, 75% , 75%)`;
+    const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
+    const randomNumGen = (Math.random() * 8) + 2;
+    const velocity = {
+        x: Math.cos(angle) * randomNumGen,
+        y: Math.sin(angle) * randomNumGen
+    };
+    enemyArray.push(new Enemy(x, y, radius, color, velocity));
 }
 
 
@@ -170,7 +165,6 @@ let scoreNumber = 0;
 let deaths = 0;
 // Parent elements
 const scoreCounterElement = document.querySelector('.scoreCounter');
-const scoreEndCounterElement = document.querySelector('.endScreen');
 
 
 // Animations/Render
@@ -236,6 +230,7 @@ function animation() {
                 cancelAnimationFrame(animationFrame)
 
                 gameStarted = false;
+                clearInterval(enemyInterval, 100)
                 deaths++; // Could be used later as a death counter
 
                 // Audio
@@ -250,11 +245,8 @@ function animation() {
                 // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
                 scoreCounterElement.style.display = 'none';
-                scoreEndCounterElement.style.display = 'block';
-                const scoreEndText = document.querySelector('#endScreenText');
-                scoreEndText.style.display = 'block';
-                const scoreEndBtn = document.querySelector('.btn');
-                scoreEndBtn.innerHTML = 'Restart'
+
+                uiDeathUI()
             }, 0);
         }; 
         
@@ -296,9 +288,28 @@ function animation() {
 }
 
 
-//Start and Restart function
+// Restart game
+var gameDifficulty = 2;
 let gameStarted = false;
 function restartGame() {
+    animation()
+
+    setTimeout(() => {
+        enemyInterval = setInterval(() => {
+            enemySpawn()
+        }, 500 / (gameDifficulty * gameDifficulty * 2) );
+    }, 2000);
+    
+    // UI
+    scoreCounterElement.style.display = 'block';
+
+    setTimeout(() => {
+        gameStarted = true;
+    }, 0);
+}
+
+// Resets game stats and positions
+function resetGame() {
     enemyArray = [];
     particleArray = [];
     playerProjectileArray = [];
@@ -308,27 +319,6 @@ function restartGame() {
     playerHitbox.xPosition = canvas.width/2;
     playerHitbox.yPosition = canvas.height/1.25;
 
-    animation()
-    if (deaths <= 0) {
-        enemySpawn()
-    }
-    
-    // UI
-    scoreCounterElement.style.display = 'block';
-    scoreEndCounterElement.style.display = 'none';
-
-    // Audio
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `ok00.wav`;
-        audio.volume = '1'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    });
-
-    setTimeout(() => {
-        gameStarted = true;
-    }, 0);
 }
 
 
@@ -367,12 +357,6 @@ onmousedown = function(event) {
         playerShoot(event)
     }
 }
-
-// Start/Restart game
-const restartButton = document.querySelector('.btn');
-restartButton.addEventListener('click', ()=> {
-    restartGame()
-});
 
 // Keyboard/Movement
 let keyArray = [];
