@@ -70,6 +70,22 @@ function uiDiffSelect(difficulty) {
     }, 1050);
 }
 
+function uiDiffToTitle() {
+    if (uiLock == false) {
+        playAudioNo()
+
+        uiDisableUI()
+        setTimeout(() => {
+            const targetSection = document.querySelector('.title-section')
+            targetSection.style.display = 'block'
+            setTimeout(() => {
+                targetSection.style.transition = '500ms'
+                targetSection.style.opacity = '1'
+            }, 10);
+        }, 520);
+    }
+}
+
 
 // Settings
 function uiSettingUI() {
@@ -150,7 +166,7 @@ function uiDisableUI() {
     setTimeout(() => {
         mainMenu.style.display = 'none';
         settingsMenu.style.display = 'none';
-        difficultyMenu.style.display = '0';
+        difficultyMenu.style.display = 'none';
     }, 500);
 
     setTimeout(() => {
@@ -202,35 +218,6 @@ function uiRestartGame() {
     restartGame()
 }
 
-
-// Audio - Requires main.js
-function playAudioYes() {
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `select00.wav`;
-        audio.volume = '1'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    });
-}
-function playAudioYes2() {
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `ok00.wav`;
-        audio.volume = '1'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    });
-}
-function playAudioNo() {
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `cancel00.wav`;
-        audio.volume = '0.25'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    });
-}
 
 function uiDeathUI() {
     const targetSection = document.querySelector('.death-section');

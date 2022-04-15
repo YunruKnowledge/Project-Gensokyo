@@ -18,10 +18,6 @@ function canvasHeightCalculation() {
 }
 
 
-// Audio
-let audioArray = []
-
-
 // Player
 class Hitbox {
     constructor(x, y, velocity) {
@@ -215,13 +211,7 @@ function animation() {
             scoreCounter.innerHTML = parseInt(scoreNumber);
             
             // Audio
-            audioArray.push(new Audio())
-            audioArray.forEach((audio, audioIndex)=> {
-                audio.src = `graze.wav`;
-                audio.volume = '0.05'
-                audio.play()
-                audioArray.splice(audioIndex, 1)
-            });
+            playAudioGraze()
         }
         
         // Collision for player - Death
@@ -234,13 +224,7 @@ function animation() {
                 deaths++; // Could be used later as a death counter
 
                 // Audio
-                audioArray.push(new Audio())
-                audioArray.forEach((audio, audioIndex)=> {
-                    audio.src = `pldead00.wav`;
-                    audio.volume = '0.3'
-                    audio.play()
-                    audioArray.splice(audioIndex, 1)
-                });
+                playAudioPlayerDeath()
                 
                 // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
@@ -256,13 +240,7 @@ function animation() {
             if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
 
                 // Audio
-                audioArray.push(new Audio())
-                audioArray.forEach((audio, audioIndex)=> {
-                    audio.src = `tan00.wav`;
-                    audio.volume = '0.25'
-                    audio.play()
-                    audioArray.splice(audioIndex, 1)
-                });
+                playAudioExplosion()
                 
                 //particles
                 for (let i = 0; i < 24; i++) {
@@ -332,14 +310,7 @@ function playerShoot(event) {
     playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))
 
     // Audio
-    let attackAudioRandom = Math.random()*2 + 1;
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `tan0${parseInt(attackAudioRandom)}.wav`;
-        audio.volume = '0.2'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    })
+    playAudioAttack()
 }
 
 
