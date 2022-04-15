@@ -173,6 +173,26 @@ body {
     background-color: var(--secondaryColorActive);
 }
 
+.difficulty-cancel {
+    margin: 2rem auto 0 auto;
+    width: max-content;
+    padding: 0.5em 1em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.difficulty-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.difficulty-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
 
 /* Settings */
 .setting-section {
