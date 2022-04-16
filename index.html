@@ -167,16 +167,75 @@
 
         <div class="setting-section">
             <div class="setting-nav">
-                <div class="setting-nav-item setting-nav-active">
+                <div class="setting-nav-item setting-nav-active" id="settingNavGraphics" onclick="uiSettingNav(1)">
                     Graphics
                 </div>
-                <div class="setting-nav-item">
+                <div class="setting-nav-item" id="settingNavControls" onclick="uiSettingNav(2)">
                     Controls
                 </div>
             </div>
 
-            <!-- content later -->
-            <div class="setting-temp"></div>
+            <!-- Graphics -->
+            <div class="setting-container" id="settingNav1">
+                <div class="setting-option">
+                    <label for="gameRule_particles">Disable Particles:</label> 
+                    <input type="checkbox" onclick="uiSettingOpt_Particles()" id="gameRule_particles">
+                </div>
+                <hr>
+                <div class="setting-option">
+                    <label for="opt2">TEST</label> 
+                    <input type="checkbox" onclick="playAudioYes()" id="opt2">
+                </div>
+                <hr>
+                <div class="setting-option">
+                    <label for="gameRule_BGM">Mute Music</label> 
+                    <input type="checkbox" onclick="uiSettingOpt_Music()" id="gameRule_BGM">
+                </div>
+                <div class="setting-option">
+                    <label for="gameRule_SFX">Mute Sound</label> 
+                    <input type="checkbox" onclick="uiSettingOpt_SFX()" id="gameRule_SFX">
+                </div>
+                <hr>
+                <div class="setting-option">
+                    <label>SFX Volume</label> 
+                    <input type="range" onclick="uiSettingOpt_SFX_Vol()" id="gameRule_SFX_Vol">
+                    <span id="settingOpt_SFX_Vol">X%</span>
+                </div>
+                <div class="setting-option">
+                    <label>Music Volume</label> 
+                    <input type="range" onclick="uiSettingOpt_Music_Vol()" id="gameRule_BGM_Vol">
+                    <span id="settingOpt_BGM_Vol">X%</span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="setting-container" id="settingNav2">
+                <div class="setting-option2">
+                    <label>Move Left:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+                <div class="setting-option2">
+                    <label>Move Down:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+                <div class="setting-option2">
+                    <label>Move Right:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+                <div class="setting-option2">
+                    <label>Move Up:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+                <hr>
+                <div class="setting-option2">
+                    <label>Shoot:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+                <div class="setting-option2">
+                    <label>Alt. Shoot:</label> 
+                    <span id="" onclick="">X</span>
+                </div>
+            </div>
 
             <div class="setting-nav2">
                 <div onclick="uiSettingClose()">

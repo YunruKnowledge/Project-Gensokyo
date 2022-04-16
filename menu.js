@@ -139,9 +139,22 @@ function uiManualDisplay(value) {
 
 
 // Settings
+var gameRule_Particles = true;
+var gameRule_BGM = true;
+var gameRule_BGM_Vol = 100;
+var gameRule_SFX = true;
+var gameRule_SFX_Vol = 100;
+
+let temp_gameRule_Particles = true;
+let temp_gameRule_BGM = true;
+let temp_gameRule_BGM_Vol = 100;
+let temp_gameRule_SFX = true;
+let temp_gameRule_SFX_Vol = 100;
+
 function uiSettingUI() {
     if (uiLock == false) {
         playAudioYes2()
+        uiSettingsUpdate()
 
         uiDisableUI()
         setTimeout(() => {
@@ -155,11 +168,133 @@ function uiSettingUI() {
     }
 }
 
+function uiSettingNav(tab) {
+    const navGraphics = document.querySelector('#settingNavGraphics');
+    const navControls = document.querySelector('#settingNavControls');
+    const graphicContainer = document.querySelector('#settingNav1');
+    const controlsContainer = document.querySelector('#settingNav2');
+
+    if (tab == 2) {
+        playAudioYes()
+        navGraphics.classList.remove('setting-nav-active')
+        graphicContainer.style.display = 'none';
+        navControls.classList.add('setting-nav-active')
+        controlsContainer.style.display = 'block';
+    } 
+    else if (tab == 1) {
+        playAudioYes()
+        navControls.classList.remove('setting-nav-active')
+        controlsContainer.style.display = 'none';
+        navGraphics.classList.add('setting-nav-active')
+        graphicContainer.style.display = 'block';
+    } 
+}
+
+function uiSettingOpt_Particles() {
+    playAudioYes()
+    if (temp_gameRule_Particles == true) {
+        temp_gameRule_Particles = false;
+    }
+    else if (temp_gameRule_Particles == false) {
+        temp_gameRule_Particles = true;
+    }
+}
+
+function uiSettingOpt_Music() {
+    playAudioYes()
+    if (temp_gameRule_BGM == true) {
+        temp_gameRule_BGM = false;
+    }
+    else if (temp_gameRule_BGM == false) {
+        temp_gameRule_BGM = true;
+    }
+}
+
+function uiSettingOpt_Music_Vol() {
+    playAudioYes()
+    const BGM_Vol = document.querySelector('#gameRule_BGM_Vol');
+    temp_gameRule_BGM_Vol = BGM_Vol.value;
+    const span = document.querySelector('#settingOpt_BGM_Vol');
+    span.innerHTML = temp_gameRule_BGM_Vol + '%'
+}
+
+function uiSettingOpt_SFX() {
+    playAudioYes()
+    if (temp_gameRule_SFX == true) {
+        temp_gameRule_SFX = false;
+    }
+    else if (temp_gameRule_SFX == false) {
+        temp_gameRule_SFX = true;
+    }
+}
+
+function uiSettingOpt_SFX_Vol() {
+    playAudioYes()
+    const SFX_Vol = document.querySelector('#gameRule_SFX_Vol');
+    temp_gameRule_SFX_Vol = SFX_Vol.value
+    const span = document.querySelector('#settingOpt_SFX_Vol');
+    span.innerHTML = temp_gameRule_SFX_Vol + '%'
+}
+
+function uiSettingsUpdate() {
+    // No particles 
+    if (gameRule_Particles == true) {
+        const no_particles = document.querySelector('#gameRule_particles');
+        no_particles.checked = false;
+    }
+    else if (gameRule_Particles == false) {
+        const no_particles = document.querySelector('#gameRule_particles');
+        no_particles.checked = true;
+    }
+
+    // Music
+    if (gameRule_BGM == true) {
+        const no_BGM = document.querySelector('#gameRule_BGM');
+        no_BGM.checked = false;
+    }
+    else if (gameRule_BGM == false) {
+        const no_BGM = document.querySelector('#gameRule_BGM');
+        no_BGM.checked = true;
+    }
+
+    // Music Volume
+    const BGM_Vol = document.querySelector('#gameRule_BGM_Vol');
+    BGM_Vol.value = gameRule_BGM_Vol;
+    const span_BGM = document.querySelector('#settingOpt_BGM_Vol');
+    span_BGM.innerHTML = gameRule_BGM_Vol + '%'
+
+    // Sound
+    if (gameRule_SFX == true) {
+        const no_SFX = document.querySelector('#gameRule_SFX');
+        no_SFX.checked = false;
+    }
+    else if (gameRule_SFX == false) {
+        const no_SFX = document.querySelector('#gameRule_SFX');
+        no_SFX.checked = true;
+    }
+
+    // Sound Volume
+    const SFX_Vol = document.querySelector('#gameRule_SFX_Vol');
+    SFX_Vol.value = gameRule_SFX_Vol;
+    const span_SFX = document.querySelector('#settingOpt_SFX_Vol');
+    span_SFX.innerHTML = gameRule_SFX_Vol + '%'
+
+    temp_gameRule_Particles = gameRule_Particles;
+    temp_gameRule_BGM = gameRule_BGM;
+    temp_gameRule_BGM_Vol = gameRule_BGM_Vol;
+    temp_gameRule_SFX = gameRule_SFX;
+    temp_gameRule_SFX_Vol = gameRule_SFX_Vol;
+}
+
 function uiSettingSave() {
     if (uiLock == false) {
         playAudioYes2()
 
-        // ...
+        gameRule_Particles = temp_gameRule_Particles;
+        gameRule_BGM = temp_gameRule_BGM;
+        gameRule_BGM_Vol = temp_gameRule_BGM_Vol;
+        gameRule_SFX = temp_gameRule_SFX;
+        gameRule_SFX_Vol = temp_gameRule_SFX_Vol;
 
         uiDisableUI()
         setTimeout(() => {
@@ -177,7 +312,11 @@ function uiSettingApply() {
     if (uiLock == false) {
         playAudioYes()
 
-        // ...
+        gameRule_Particles = temp_gameRule_Particles;
+        gameRule_BGM = temp_gameRule_BGM;
+        gameRule_BGM_Vol = temp_gameRule_BGM_Vol;
+        gameRule_SFX = temp_gameRule_SFX;
+        gameRule_SFX_Vol = temp_gameRule_SFX_Vol;
     }
 }
 
@@ -185,7 +324,11 @@ function uiSettingClose() {
     if (uiLock == false) {
         playAudioNo()
 
-        // ...
+        temp_gameRule_Particles = gameRule_Particles;
+        temp_gameRule_BGM = gameRule_BGM;
+        temp_gameRule_BGM_Vol = gameRule_BGM_Vol;
+        temp_gameRule_SFX = gameRule_SFX;
+        temp_gameRule_SFX_Vol = gameRule_SFX_Vol;
 
         uiDisableUI()
         setTimeout(() => {
