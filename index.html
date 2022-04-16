@@ -17,12 +17,12 @@
         <div class="menu-shadow"></div>
 
         <div class="title-section">
-            <div class="title-btn" onclick="uiDifficultyUI()">
+            <div class="title-btn" onclick="uiGMSelect(1, false)">
                 <p>
                     Start Game
                 </p>
             </div>
-            <div class="title-btn">
+            <div class="title-btn" onclick="uiGamemodeUI()">
                 <p>
                     Gamemodes
                 </p>
@@ -70,8 +70,74 @@
                     </p>
                 </div>
             </div>
-            <div class="difficulty-cancel" onclick="uiDiffToTitle()">
-                Back
+            <div class="difficulty-cancel" onclick="uiBackToTitle()">
+                Back to Title
+            </div>
+        </div>
+
+        <div class="gamemode-section">
+            <h1>
+                Select a Gamemode
+            </h1>
+
+            <div class="gamemode-line"></div>
+
+            <p>
+                Custom Gamemodes
+            </p>
+
+            <div class="gamemode-flex">
+                <div class="gamemode-selector" onclick="uiGMSelect(2, false)">
+                    <p>
+                        Graze
+                    </p>
+                </div>
+                <div class="gamemode-selector" onclick="uiGMSelect(3, false)">
+                    <p>
+                        Randomizer
+                    </p>
+                </div>
+                <div class="gamemode-selector" onclick="uiGMSelect(4, false)">
+                    <p>
+                        Boss
+                    </p>
+                </div>
+            </div>
+
+            <div class="gamemode-flex">
+                <div class="gamemode-selector" onclick="uiGMSelect(2, true)">
+                    <p>
+                        Graze-Pratice
+                    </p>
+                </div>
+                <div class="gamemode-selector" onclick="uiGMSelect(3, true)">
+                    <p>
+                        Randomizer-Pratice
+                    </p>
+                </div>
+                <div class="gamemode-selector" onclick="uiGMSelect(4, true)">
+                    <p>
+                        Boss-Pratice
+                    </p>
+                </div>
+            </div>
+
+            <div class="gamemode-line"></div>
+
+            <p>
+                Base Gamemode with no Death
+            </p>
+
+            <div class="gamemode-flex">
+                <div class="gamemode-selector" onclick="uiGMSelect(1, true)">
+                    <p>
+                        Normal-Pratice
+                    </p>
+                </div>
+            </div>
+
+            <div class="gamemode-cancel" onclick="uiBackToTitle()">
+                Close
             </div>
         </div>
 
@@ -116,7 +182,7 @@
             </p>
         </div>
         <div class="flex">
-            <div class="death-btn" onclick="uiBackToTitle()">
+            <div class="death-btn" onclick="uiGameToTitle()">
                 Back to Title
             </div>
             <div class="death-btn" onclick="uiRestartGame()">
