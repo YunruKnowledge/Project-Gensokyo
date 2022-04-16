@@ -211,11 +211,11 @@ function uiSettingOpt_Music() {
 }
 
 function uiSettingOpt_Music_Vol() {
-    playAudioYes()
     const BGM_Vol = document.querySelector('#gameRule_BGM_Vol');
     temp_gameRule_BGM_Vol = BGM_Vol.value;
     const span = document.querySelector('#settingOpt_BGM_Vol');
     span.innerHTML = temp_gameRule_BGM_Vol + '%'
+    playAudioSettingTestBGM()
 }
 
 function uiSettingOpt_SFX() {
@@ -229,11 +229,11 @@ function uiSettingOpt_SFX() {
 }
 
 function uiSettingOpt_SFX_Vol() {
-    playAudioYes()
     const SFX_Vol = document.querySelector('#gameRule_SFX_Vol');
     temp_gameRule_SFX_Vol = SFX_Vol.value
     const span = document.querySelector('#settingOpt_SFX_Vol');
     span.innerHTML = temp_gameRule_SFX_Vol + '%'
+    playAudioSettingTestSFX()
 }
 
 function uiSettingsUpdate() {
@@ -288,13 +288,14 @@ function uiSettingsUpdate() {
 
 function uiSettingSave() {
     if (uiLock == false) {
-        playAudioYes2()
 
         gameRule_Particles = temp_gameRule_Particles;
         gameRule_BGM = temp_gameRule_BGM;
         gameRule_BGM_Vol = temp_gameRule_BGM_Vol;
         gameRule_SFX = temp_gameRule_SFX;
         gameRule_SFX_Vol = temp_gameRule_SFX_Vol;
+
+        playAudioYes2()
 
         uiDisableUI()
         setTimeout(() => {
@@ -310,25 +311,27 @@ function uiSettingSave() {
 
 function uiSettingApply() {
     if (uiLock == false) {
-        playAudioYes()
-
+        
         gameRule_Particles = temp_gameRule_Particles;
         gameRule_BGM = temp_gameRule_BGM;
         gameRule_BGM_Vol = temp_gameRule_BGM_Vol;
         gameRule_SFX = temp_gameRule_SFX;
         gameRule_SFX_Vol = temp_gameRule_SFX_Vol;
+        
+        playAudioYes()
     }
 }
 
 function uiSettingClose() {
     if (uiLock == false) {
-        playAudioNo()
-
+        
         temp_gameRule_Particles = gameRule_Particles;
         temp_gameRule_BGM = gameRule_BGM;
         temp_gameRule_BGM_Vol = gameRule_BGM_Vol;
         temp_gameRule_SFX = gameRule_SFX;
         temp_gameRule_SFX_Vol = gameRule_SFX_Vol;
+
+        playAudioNo()
 
         uiDisableUI()
         setTimeout(() => {
