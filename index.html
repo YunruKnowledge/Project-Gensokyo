@@ -27,7 +27,7 @@
                     Gamemodes
                 </p>
             </div>
-            <div class="title-btn">
+            <div class="title-btn" onclick="uiManualUI()">
                 <p>
                     How to Play
                 </p>
@@ -137,6 +137,30 @@
             </div>
 
             <div class="gamemode-cancel" onclick="uiBackToTitle()">
+                Close
+            </div>
+        </div>
+
+        <div class="manual-section">
+            <h1>
+                How To Play:
+            </h1>
+            <div class="manual-display">
+                <div class="manual-container">
+                    <img src="./manual-img-1.jpg">
+                    <img src="./manual-img-2.jpg">
+                    <img src="./manual-img-3.jpg">
+                </div>
+            </div>
+            <div class="flex">
+                <div class="manual-btn" onclick="uiManualDisplay(-1)">
+                    <
+                </div>
+                <div class="manual-btn" onclick="uiManualDisplay(1)">
+                    >
+                </div>
+            </div>
+            <div class="manual-cancel" onclick="uiBackToTitle()">
                 Close
             </div>
         </div>

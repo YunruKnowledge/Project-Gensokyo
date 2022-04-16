@@ -95,6 +95,44 @@ function uiGMSelect(type, pratice) {
 }
 
 
+// Manual
+function uiManualUI() {
+    if (uiLock == false) {
+        playAudioYes2()
+
+        uiDisableUI()
+        setTimeout(() => {
+            const targetSection = document.querySelector('.manual-section')
+            targetSection.style.display = 'block'
+            setTimeout(() => {
+                targetSection.style.transition = '500ms'
+                targetSection.style.opacity = '1'
+            }, 10);
+        }, 520);
+    }
+}
+
+let uiManualDisplayValue = 0;
+function uiManualDisplay(value) {
+    const uiManualDisplayBaseValue = 640;
+    const container = document.querySelector('.manual-container');
+    uiManualDisplayValue += value;
+    
+    if (uiManualDisplayValue < 0) {
+        uiManualDisplayValue -= value;
+        playAudioWarning()
+    }
+    else if (uiManualDisplayValue >= 3) {
+        uiManualDisplayValue -= value;
+        playAudioWarning()
+    }
+    else {
+        container.style.transform = `translateX(-${uiManualDisplayBaseValue * uiManualDisplayValue}px)`;
+        playAudioYes()
+    }
+}
+
+
 // Settings
 function uiSettingUI() {
     if (uiLock == false) {
@@ -157,7 +195,7 @@ function uiSettingClose() {
 }
 
 
-// Difficulty
+// Credits
 function uiCreditUI() {
     if (uiLock == false) {
         playAudioYes2()
@@ -196,9 +234,10 @@ function uiBackToTitle() {
 function uiDisableUI() {
     uiLock = true;
     const mainMenu = document.querySelector('.title-section');
-    const settingsMenu = document.querySelector('.setting-section');
     const difficultyMenu = document.querySelector('.difficulty-section');
     const gamemodeMenu = document.querySelector('.gamemode-section');
+    const manualMenu = document.querySelector('.manual-section');
+    const settingsMenu = document.querySelector('.setting-section');
     const creditMenu = document.querySelector('.credit-section');
     
     mainMenu.style.transition = '500ms';
@@ -211,6 +250,8 @@ function uiDisableUI() {
     gamemodeMenu.style.opacity = '0';
     creditMenu.style.transition = '500ms';
     creditMenu.style.opacity = '0';
+    manualMenu.style.transition = '500ms';
+    manualMenu.style.opacity = '0';
     
     setTimeout(() => {
         mainMenu.style.display = 'none';
@@ -218,6 +259,7 @@ function uiDisableUI() {
         difficultyMenu.style.display = 'none';
         gamemodeMenu.style.display = 'none';
         creditMenu.style.display = 'none';
+        manualMenu.style.display = 'none';
     }, 500);
 
     setTimeout(() => {

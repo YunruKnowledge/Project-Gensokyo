@@ -38,6 +38,17 @@ function playAudioNo() {
     });
 }
 
+// Warning
+function playAudioWarning() {
+    audioArray.push(new Audio())
+    audioArray.forEach((audio, audioIndex)=> {
+        audio.src = `timeout.wav`;
+        audio.volume = '0.45'
+        audio.play()
+        audioArray.splice(audioIndex, 1)
+    });
+}
+
 // Attack sound
 function playAudioAttack() {
     const attackAudioRandom = Math.random()*2 + 1;

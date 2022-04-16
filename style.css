@@ -291,6 +291,92 @@ body {
 }
 
 
+/* Manual */
+.manual-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    background-color: var(--secondaryColor);
+    display: none;
+    
+    font-size: 1.6rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.manual-section > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0.25em;
+}
+
+.manual-display {
+    width: 640px;
+    height: 360px;
+    border-top: solid 8px var(--primaryColor);
+    border-bottom: solid 8px var(--primaryColor);
+    overflow: hidden;
+}
+
+.manual-container {
+    display: flex;
+    height: 360px;
+    width: max-content;
+    overflow: visible;
+    transition: 600ms ease;
+}
+
+.manual-container > img {
+    width: 640px;
+    height: 360px;
+    object-fit: cover;
+}
+
+.manual-btn {
+    font-size: 2rem;
+    background-color: var(--secondaryColor);
+    flex: 2;
+    text-align: center;
+    padding: 0.25em 0;
+}
+
+.manual-btn:hover {
+    background-color: var(--secondaryColorActive);
+}
+
+.manual-btn:active {
+    background-color: var(--primaryColorHover);
+    color: var(--secondaryColor);
+}
+
+.manual-cancel {
+    width: max-content;
+    padding: 0.5em 2em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+    background-color: var(--secondaryColor);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 4px;
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.manual-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.manual-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
 /* Settings */
 .setting-section {
     position: fixed;
