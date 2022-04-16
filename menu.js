@@ -70,13 +70,15 @@ function uiDiffSelect(difficulty) {
     }, 1050);
 }
 
-function uiDiffToTitle() {
+
+// Gamemode Menu
+function uiGamemodeUI() {
     if (uiLock == false) {
-        playAudioNo()
+        playAudioYes2()
 
         uiDisableUI()
         setTimeout(() => {
-            const targetSection = document.querySelector('.title-section')
+            const targetSection = document.querySelector('.gamemode-section')
             targetSection.style.display = 'block'
             setTimeout(() => {
                 targetSection.style.transition = '500ms'
@@ -84,6 +86,12 @@ function uiDiffToTitle() {
             }, 10);
         }, 520);
     }
+}
+
+function uiGMSelect(type, pratice) {
+    gameType = type;
+    gamePraticeMode = pratice;
+    uiDifficultyUI()
 }
 
 
@@ -149,12 +157,30 @@ function uiSettingClose() {
 }
 
 
+function uiBackToTitle() {
+    if (uiLock == false) {
+        playAudioNo()
+
+        uiDisableUI()
+        setTimeout(() => {
+            const targetSection = document.querySelector('.title-section')
+            targetSection.style.display = 'block'
+            setTimeout(() => {
+                targetSection.style.transition = '500ms'
+                targetSection.style.opacity = '1'
+            }, 10);
+        }, 520);
+    }
+}
+
+
 // Disabling all UI sections
 function uiDisableUI() {
     uiLock = true;
     const mainMenu = document.querySelector('.title-section');
     const settingsMenu = document.querySelector('.setting-section');
     const difficultyMenu = document.querySelector('.difficulty-section');
+    const gamemodeMenu = document.querySelector('.gamemode-section');
     
     mainMenu.style.transition = '500ms';
     mainMenu.style.opacity = '0';
@@ -162,11 +188,14 @@ function uiDisableUI() {
     settingsMenu.style.opacity = '0';
     difficultyMenu.style.transition = '500ms';
     difficultyMenu.style.opacity = '0';
+    gamemodeMenu.style.transition = '500ms';
+    gamemodeMenu.style.opacity = '0';
     
     setTimeout(() => {
         mainMenu.style.display = 'none';
         settingsMenu.style.display = 'none';
         difficultyMenu.style.display = 'none';
+        gamemodeMenu.style.display = 'none';
     }, 500);
 
     setTimeout(() => {
@@ -176,7 +205,7 @@ function uiDisableUI() {
 
 
 // Game to Main Menu
-function uiBackToTitle() {
+function uiGameToTitle() {
     if (uiLock == false) {
         uiLock = true;
         playAudioYes2()
