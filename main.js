@@ -268,6 +268,8 @@ function animation() {
 
 // Restart game
 var gameDifficulty = 2;
+var gameType = 1;
+var gamePraticeMode = false;
 let gameStarted = false;
 function restartGame() {
     animation()
