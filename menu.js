@@ -99,6 +99,8 @@ function uiGMSelect(type, pratice) {
 function uiManualUI() {
     if (uiLock == false) {
         playAudioYes2()
+        uiManualDisplayValue = 0;
+        uiManualDisplay(0)
 
         uiDisableUI()
         setTimeout(() => {
@@ -125,6 +127,9 @@ function uiManualDisplay(value) {
     else if (uiManualDisplayValue >= 3) {
         uiManualDisplayValue -= value;
         playAudioWarning()
+    }
+    else if (value == 0) {
+        container.style.transform = `translateX(-${uiManualDisplayBaseValue * uiManualDisplayValue}px)`;
     }
     else {
         container.style.transform = `translateX(-${uiManualDisplayBaseValue * uiManualDisplayValue}px)`;
