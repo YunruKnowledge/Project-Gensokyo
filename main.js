@@ -72,9 +72,13 @@ class PlayerProjectile {
         this.velocity = velocity; 
     }
     drawPlayerProjectile() {
+        const playerProjectileGradient = canvasContext.createLinearGradient(0,0,0,720);
+        playerProjectileGradient.addColorStop(0, 'red')
+        playerProjectileGradient.addColorStop(1, this.color)
+        
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = this.color;
+        canvasContext.fillStyle = playerProjectileGradient;
         canvasContext.fill()
     }
     UpdateAnimation() {
