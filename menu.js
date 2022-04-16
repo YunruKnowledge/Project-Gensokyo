@@ -157,6 +157,24 @@ function uiSettingClose() {
 }
 
 
+// Difficulty
+function uiCreditUI() {
+    if (uiLock == false) {
+        playAudioYes2()
+
+        uiDisableUI()
+        setTimeout(() => {
+            const targetSection = document.querySelector('.credit-section')
+            targetSection.style.display = 'block'
+            setTimeout(() => {
+                targetSection.style.transition = '500ms'
+                targetSection.style.opacity = '1'
+            }, 10);
+        }, 520);
+    }
+}
+
+
 function uiBackToTitle() {
     if (uiLock == false) {
         playAudioNo()
@@ -181,6 +199,7 @@ function uiDisableUI() {
     const settingsMenu = document.querySelector('.setting-section');
     const difficultyMenu = document.querySelector('.difficulty-section');
     const gamemodeMenu = document.querySelector('.gamemode-section');
+    const creditMenu = document.querySelector('.credit-section');
     
     mainMenu.style.transition = '500ms';
     mainMenu.style.opacity = '0';
@@ -190,12 +209,15 @@ function uiDisableUI() {
     difficultyMenu.style.opacity = '0';
     gamemodeMenu.style.transition = '500ms';
     gamemodeMenu.style.opacity = '0';
+    creditMenu.style.transition = '500ms';
+    creditMenu.style.opacity = '0';
     
     setTimeout(() => {
         mainMenu.style.display = 'none';
         settingsMenu.style.display = 'none';
         difficultyMenu.style.display = 'none';
         gamemodeMenu.style.display = 'none';
+        creditMenu.style.display = 'none';
     }, 500);
 
     setTimeout(() => {
