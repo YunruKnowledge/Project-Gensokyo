@@ -1,0 +1,665 @@
+
+
+
+
+:root {
+    --primaryColor: hsl(340, 90%, 50%);
+    --primaryColorHover: hsl(340, 75%, 35%);
+    --secondaryColor: hsl(0, 0%, 90%);
+    --secondaryColorActive: hsl(0, 0%, 70%);
+    --secondaryColorShadowed: hsl(0, 0%, 85%);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.scoreCounter {
+    position: fixed;
+    color:var(--secondaryColor);
+    font-size: 1.6rem;
+    font-weight: 900;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 1rem;
+    -webkit-user-select: none;
+    user-select: none;
+
+    display: none;
+}
+
+.flex {
+    display: flex;
+}
+
+/*
+    MENU UI
+*/
+
+.menu {
+    position: fixed;
+    inset: 0 0;
+    background-color: #242424;
+    background-image: url(./main-menu-bg.jpg);
+    background-size: 95%;
+    animation: menu-bg-ani 30s infinite alternate ease-in-out;
+    transition: 1s;
+}
+
+@keyframes menu-bg-ani {
+    from {background-position: 0%;}
+    to {background-position: -200%;}
+}
+
+.menu-shadow {
+    position: fixed;
+    inset: 0 0;
+    background-image: linear-gradient(to right, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.5) 60%);
+    background-size: 300%;
+    transition: 600ms;
+    background-position: left;
+}
+
+
+/* Main Menu */
+.title-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.title-btn {
+    background-color: var(--secondaryColor);
+    padding: 0.25em 1em;
+    border: 8px solid var(--primaryColor);
+    transform: skewX(-20deg);
+    margin: 0.5em 1.5em;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    transition: 0s, transform 400ms;
+
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.title-btn > p {
+    transition: 50ms ease-in, transform 400ms;
+}
+
+.title-btn > p {
+    transform: skewX(20deg);
+}
+
+.title-btn:hover {
+    transform: skewX(-20deg) scaleX(110%);
+}
+
+.title-btn:hover > p {
+    transform: skewX(20deg) scaleX(91%);
+    color: var(--primaryColorHover);
+}
+
+.title-btn:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Difficulty screen */
+.difficulty-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    padding: 1rem;
+    background-color: var(--secondaryColor);
+    display: none;
+    
+    font-size: 1.6rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.difficulty-section > p {
+    text-align: center;
+    margin-bottom: 0.5em;
+}
+
+.difficulty-selector {
+    margin: 0 1em;
+    background-color: var(--secondaryColor);
+    border: 8px solid var(--primaryColor);
+    padding: 0.5em 1em;
+    transform: skewX(-20deg);
+    transition: 0s, transform 400ms;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+.difficulty-selector > p {
+    transition: 50ms ease-in, transform 400ms;
+}
+
+.difficulty-selector > p {
+    transform: skewX(20deg);
+}
+
+.difficulty-selector:hover {
+    transform: skewX(-20deg) scaleX(110%);
+}
+
+.difficulty-selector:hover > p {
+    transform: skewX(20deg) scaleX(91%);
+    color: var(--primaryColorHover);
+}
+
+.difficulty-selector:active {
+    background-color: var(--secondaryColorActive);
+}
+
+.difficulty-cancel {
+    margin: 2rem auto 0 auto;
+    width: max-content;
+    padding: 0.5em 1em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.difficulty-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.difficulty-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Gamemode screen */
+.gamemode-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    padding: 0 1rem 1rem 1rem;
+    background-color: var(--secondaryColor);
+    display: none;
+    
+    font-size: 1.6rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.gamemode-flex {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+
+.gamemode-section > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0.5em 0;
+}
+
+.gamemode-line {
+    height: 4px;
+    background-color: var(--primaryColor);
+    margin-top: 1rem;
+}
+
+.gamemode-section > p {
+    font-size: 1.3rem;
+    text-align: center;
+    margin: 0.5em 0;
+}
+
+.gamemode-selector {
+    width: max-content;
+    margin: 0 1em;
+    background-color: var(--secondaryColor);
+    border: 8px solid var(--primaryColor);
+    padding: 0.5em 1em;
+    transform: skewX(-20deg);
+    transition: 0s, transform 400ms;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+}
+
+.gamemode-selector > p {
+    transition: 50ms ease-in, transform 400ms;
+}
+
+.gamemode-selector > p {
+    transform: skewX(20deg);
+}
+
+.gamemode-selector:hover {
+    transform: skewX(-20deg) scaleX(110%);
+}
+
+.gamemode-selector:hover > p {
+    transform: skewX(20deg) scaleX(91%);
+    color: var(--primaryColorHover);
+}
+
+.gamemode-selector:active {
+    background-color: var(--secondaryColorActive);
+}
+
+.gamemode-cancel {
+    margin: 2rem auto 0 auto;
+    width: max-content;
+    padding: 0.5em 1em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.gamemode-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.gamemode-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Manual */
+.manual-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    background-color: var(--secondaryColor);
+    display: none;
+    
+    font-size: 1.6rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.manual-section > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0.25em;
+}
+
+.manual-display {
+    width: 640px;
+    height: 360px;
+    border-top: solid 8px var(--primaryColor);
+    border-bottom: solid 8px var(--primaryColor);
+    overflow: hidden;
+}
+
+.manual-container {
+    display: flex;
+    height: 360px;
+    width: max-content;
+    overflow: visible;
+    transition: 600ms ease;
+}
+
+.manual-container > img {
+    width: 640px;
+    height: 360px;
+    object-fit: cover;
+}
+
+.manual-btn {
+    font-size: 2rem;
+    background-color: var(--secondaryColor);
+    flex: 2;
+    text-align: center;
+    padding: 0.25em 0;
+}
+
+.manual-btn:hover {
+    background-color: var(--secondaryColorActive);
+}
+
+.manual-btn:active {
+    background-color: var(--primaryColorHover);
+    color: var(--secondaryColor);
+}
+
+.manual-cancel {
+    width: max-content;
+    padding: 0.5em 2em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+    background-color: var(--secondaryColor);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 4px;
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.manual-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.manual-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Settings */
+.setting-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    min-width: 680px;
+    min-height: 420px;
+    background-color: var(--secondaryColor);
+    display: none;
+
+    font-size: 1.3rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.setting-nav {
+    display: flex;
+    gap: 1rem;
+    box-shadow: inset 0 -8px var(--primaryColor);
+}
+
+.setting-nav-item {
+    padding: 0.5em;
+    border-bottom: 8px solid var(--primaryColorHover);
+    height: max-content;
+    cursor: pointer;
+
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.setting-nav-item:hover {
+    background-color: var(--secondaryColorShadowed);
+}
+
+.setting-nav-item:active {
+    background-color: var(--secondaryColorActive);
+}
+
+.setting-nav-active {
+    border-bottom: 8px solid var(--secondaryColorShadowed);
+    background-color: var(--secondaryColorShadowed);
+}
+
+.setting-nav-active:active {
+    background-color: var(--secondaryColorShadowed);
+}
+
+.setting-container {
+    height: 400px;
+    overflow-y: scroll;
+    padding: 1rem;
+    font-weight: 600;
+    background-color: var(--secondaryColorShadowed);
+}
+
+#settingNav1 {
+    display: block;
+}
+
+#settingNav2 {
+    display: none;
+}
+
+.setting-option {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.setting-option > label {
+    cursor: pointer;
+}
+
+.setting-option > input[type=checkbox] {
+    position: relative;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.setting-option > input[type=checkbox]:before {
+    content: "";
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    top: -0.05em;
+    left: 0;
+    background-color: var(--secondaryColor);
+    border: 2px solid var(--primaryColor);
+    box-sizing: border-box;
+}
+
+.setting-option > input[type=checkbox]:checked:before {
+    content: "";
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    top: -0.05em;
+    left: 0;
+    background-color:var(--primaryColorHover);
+}
+
+.setting-option > input[type=checkbox]:checked:after {
+    content: "";
+    display: block;
+    width: 0.5em;
+    height: 1em;
+    border: solid var(--secondaryColor);
+    border-width: 0 0.2em 0.2em 0;
+    transform: rotate(35deg);
+    position: absolute;
+    top: -0.4em;
+    left: 0.15em;
+}
+
+.setting-container > hr {
+    border: 2px solid var(--primaryColor);
+    margin: 1rem 0;
+}
+
+.setting-option > input[type=range] {
+    appearance: none;
+    background-color: var(--secondaryColorActive);
+    border-radius: 1rem;
+    height: 0.5em;
+}
+
+.setting-option > input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.25em;
+    height: 1.25em;
+    background-color: var(--secondaryColor);
+    border: solid 2px var(--primaryColor);
+}
+
+.setting-option2 {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5em;
+}
+
+.setting-option2 > span {
+    padding: 0 1em;
+    border: solid 2px var(--primaryColor);
+    cursor: pointer;
+}
+
+.setting-option2 > span:hover {
+    background-color: var(--secondaryColorActive);
+}
+
+.setting-option2 > span:active {
+    color: var(--primaryColorHover);
+}
+
+.setting-nav2 {
+    transform: translateY(-100%);
+    display: flex;
+    flex-direction: row-reverse;
+    position: absolute;
+    width: 680px;
+    padding-right: 1em;
+    box-sizing: border-box;
+}
+
+.setting-nav2 > div {
+    padding: 0.5em 1em;
+    height: max-content;
+    user-select: none;
+    cursor: pointer;
+    margin: 0 1em 0 0;
+    border-top: 4px solid var(--primaryColor);
+    border-left: 4px solid var(--primaryColor);
+    border-right: 4px solid var(--primaryColor);
+    background-color: var(--secondaryColor);
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.setting-nav2 > div:hover {
+    color: var(--primaryColorHover);
+}
+
+.setting-nav2 > div:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Credits Menu */
+.credit-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    border: 8px solid var(--primaryColor);
+    padding: 1rem;
+    background-color: var(--secondaryColor);
+    min-width: 600px;
+    display: none;
+    
+    font-size: 1.6rem;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.credit-section > h1 {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.credit-line {
+    height: 4px;
+    background-color: var(--primaryColor);
+    margin: 1rem 0;
+}
+
+.credit-section > p > span {
+    font-size: 1.3rem;
+    text-align: center;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.credit-cancel {
+    margin: 2rem auto 0 auto;
+    width: max-content;
+    padding: 0.5em 1em;
+    user-select: none;
+    cursor: pointer;
+    border: 4px solid var(--primaryColor);
+
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.credit-cancel:hover {
+    color: var(--primaryColorHover);
+}
+
+.credit-cancel:active {
+    background-color: var(--secondaryColorActive);
+}
+
+
+/* Death Menu */
+.death-section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-color: var(--secondaryColor);
+    padding: 0.5em;
+    border: 0.5rem solid var(--primaryColor);
+    min-width: 20rem;
+    display: none;
+
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.death-btn {
+    background-color:var(--primaryColor);
+    padding: 0.5em 1em;
+    width: max-content;
+    margin: auto;
+    margin-top: .5em;
+    transition: 200ms;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+
+    color: var(--secondaryColor);
+}
+
+.death-btn:hover {
+    background-color: var(--primaryColorHover);
+    transform: scale(105%);
+}

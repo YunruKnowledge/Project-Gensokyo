@@ -18,10 +18,6 @@ function canvasHeightCalculation() {
 }
 
 
-// Audio
-let audioArray = []
-
-
 // Player
 class Hitbox {
     constructor(x, y, velocity) {
@@ -76,9 +72,13 @@ class PlayerProjectile {
         this.velocity = velocity; 
     }
     drawPlayerProjectile() {
+        const playerProjectileGradient = canvasContext.createLinearGradient(0,0,0,720);
+        playerProjectileGradient.addColorStop(0, 'red')
+        playerProjectileGradient.addColorStop(1, this.color)
+        
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = this.color;
+        canvasContext.fillStyle = playerProjectileGradient;
         canvasContext.fill()
     }
     UpdateAnimation() {
@@ -113,22 +113,17 @@ class Enemy {
 }
 let enemyArray = []
 function enemySpawn() {
-    setInterval(() => {
-        const radius = Math.random() * (14 - 10) + 14;
-        const x = Math.random() * canvas.width;
-        const y = -radius;
-        const color = `hsl(${Math.random()*360}, 75% , 75%)`;
-
-        const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
-
-        const randomNumGen = (Math.random() * 8) + 2;
-        const velocity = {
-            x: Math.cos(angle) * randomNumGen,
-            y: Math.sin(angle) * randomNumGen
-        };
-
-        enemyArray.push(new Enemy(x, y, radius, color, velocity));
-    }, 500);
+    const radius = Math.random() * (14 - 10) + 14;
+    const x = Math.random() * canvas.width;
+    const y = -radius;
+    const color = `hsl(${Math.random()*360}, 75% , 75%)`;
+    const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
+    const randomNumGen = (Math.random() * 8) + 2;
+    const velocity = {
+        x: Math.cos(angle) * randomNumGen,
+        y: Math.sin(angle) * randomNumGen
+    };
+    enemyArray.push(new Enemy(x, y, radius, color, velocity));
 }
 
 
@@ -170,7 +165,6 @@ let scoreNumber = 0;
 let deaths = 0;
 // Parent elements
 const scoreCounterElement = document.querySelector('.scoreCounter');
-const scoreEndCounterElement = document.querySelector('.endScreen');
 
 
 // Animations/Render
@@ -221,13 +215,7 @@ function animation() {
             scoreCounter.innerHTML = parseInt(scoreNumber);
             
             // Audio
-            audioArray.push(new Audio())
-            audioArray.forEach((audio, audioIndex)=> {
-                audio.src = `graze.wav`;
-                audio.volume = '0.05'
-                audio.play()
-                audioArray.splice(audioIndex, 1)
-            });
+            playAudioGraze()
         }
         
         // Collision for player - Death
@@ -236,25 +224,17 @@ function animation() {
                 cancelAnimationFrame(animationFrame)
 
                 gameStarted = false;
+                clearInterval(enemyInterval, 100)
                 deaths++; // Could be used later as a death counter
 
                 // Audio
-                audioArray.push(new Audio())
-                audioArray.forEach((audio, audioIndex)=> {
-                    audio.src = `pldead00.wav`;
-                    audio.volume = '0.3'
-                    audio.play()
-                    audioArray.splice(audioIndex, 1)
-                });
+                playAudioPlayerDeath()
                 
                 // UI
                 scoreEndCounter.innerHTML = parseInt(scoreNumber);
                 scoreCounterElement.style.display = 'none';
-                scoreEndCounterElement.style.display = 'block';
-                const scoreEndText = document.querySelector('#endScreenText');
-                scoreEndText.style.display = 'block';
-                const scoreEndBtn = document.querySelector('.btn');
-                scoreEndBtn.innerHTML = 'Restart'
+
+                uiDeathUI()
             }, 0);
         }; 
         
@@ -264,13 +244,7 @@ function animation() {
             if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
 
                 // Audio
-                audioArray.push(new Audio())
-                audioArray.forEach((audio, audioIndex)=> {
-                    audio.src = `tan00.wav`;
-                    audio.volume = '0.25'
-                    audio.play()
-                    audioArray.splice(audioIndex, 1)
-                });
+                playAudioExplosion()
                 
                 //particles
                 for (let i = 0; i < 24; i++) {
@@ -296,9 +270,30 @@ function animation() {
 }
 
 
-//Start and Restart function
+// Restart game
+var gameDifficulty = 2;
+var gameType = 1;
+var gamePraticeMode = false;
 let gameStarted = false;
 function restartGame() {
+    animation()
+
+    setTimeout(() => {
+        enemyInterval = setInterval(() => {
+            enemySpawn()
+        }, 500 / (gameDifficulty * gameDifficulty * 2) );
+    }, 2000);
+    
+    // UI
+    scoreCounterElement.style.display = 'block';
+
+    setTimeout(() => {
+        gameStarted = true;
+    }, 0);
+}
+
+// Resets game stats and positions
+function resetGame() {
     enemyArray = [];
     particleArray = [];
     playerProjectileArray = [];
@@ -308,27 +303,6 @@ function restartGame() {
     playerHitbox.xPosition = canvas.width/2;
     playerHitbox.yPosition = canvas.height/1.25;
 
-    animation()
-    if (deaths <= 0) {
-        enemySpawn()
-    }
-    
-    // UI
-    scoreCounterElement.style.display = 'block';
-    scoreEndCounterElement.style.display = 'none';
-
-    // Audio
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `ok00.wav`;
-        audio.volume = '1'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    });
-
-    setTimeout(() => {
-        gameStarted = true;
-    }, 0);
 }
 
 
@@ -342,14 +316,7 @@ function playerShoot(event) {
     playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))
 
     // Audio
-    let attackAudioRandom = Math.random()*2 + 1;
-    audioArray.push(new Audio())
-    audioArray.forEach((audio, audioIndex)=> {
-        audio.src = `tan0${parseInt(attackAudioRandom)}.wav`;
-        audio.volume = '0.2'
-        audio.play()
-        audioArray.splice(audioIndex, 1)
-    })
+    playAudioAttack()
 }
 
 
@@ -367,12 +334,6 @@ onmousedown = function(event) {
         playerShoot(event)
     }
 }
-
-// Start/Restart game
-const restartButton = document.querySelector('.btn');
-restartButton.addEventListener('click', ()=> {
-    restartGame()
-});
 
 // Keyboard/Movement
 let keyArray = [];
