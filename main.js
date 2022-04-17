@@ -317,6 +317,9 @@ function playerShoot(event) {
 
     // Audio
     playAudioAttack()
+
+    console.log(angle)
+    console.log(velocity)
 }
 
 
@@ -347,6 +350,7 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.x = 0;
     }
 
+    // Shooting with Space
     if (keyArray['Space']) { 
         if (gameStarted === true) {
             playerShoot(mousePosition)
@@ -356,6 +360,7 @@ onkeydown = onkeyup = function(event) {
         // Nothing
     }
 
+    // Move Right
     if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
         playerHitbox.velocity.x = 2;
     }
@@ -363,6 +368,7 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.x = 4;
     }
 
+    // Move Up
     if (keyArray['KeyW'] && keyArray['ShiftLeft']) {
         playerHitbox.velocity.y = -2;
     }
@@ -370,6 +376,7 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.y = -4;
     }
 
+    // Move Left
     if (keyArray['KeyA'] && keyArray['ShiftLeft']) {
         playerHitbox.velocity.x = -2;
     }
@@ -377,6 +384,7 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.x = -4;
     }
     
+    // Move Down
     if (keyArray['KeyS'] && keyArray['ShiftLeft']) {
         playerHitbox.velocity.y = 2;
     }
@@ -384,6 +392,33 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.y = 4;
     }
     
+    // Skills
+    if (keyArray['KeyE']) {
+        playerSpell_1()
+    }
+    
     // console.log(event.code)
     // console.log(keyArray)
+}
+
+function playerSpell_1() {
+
+    for (let i = 0; i < 19; i++) {
+        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', {x:Math.cos(i), y:Math.sin(i)}))
+    }
+    playAudioAttack()
+
+    setTimeout(() => {
+        for (let i = 0; i < 19; i++) {
+            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', {x:Math.cos(i), y:Math.sin(i)}))
+        }
+        playAudioAttack()
+
+        setTimeout(() => {
+            for (let i = 0; i < 19; i++) {
+                playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', {x:Math.cos(i), y:Math.sin(i)}))
+            }
+            playAudioAttack()
+        }, 200);
+    }, 200);
 }
