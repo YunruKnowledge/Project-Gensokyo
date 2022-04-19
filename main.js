@@ -326,6 +326,8 @@ function animation() {
                 scoreCounterElement.style.display = 'none';
 
                 uiDeathUI()
+                
+                clearInterval(gamemode_shmup_auto_shooting, 1)
             }, 0);
         }; 
         
@@ -437,7 +439,6 @@ onmousedown = function(event) {
 onmouseup = function(event) {    
     if (gameStarted === true) {          
         clearInterval(gamemode_shmup_auto_shooting, 1)
-        
     }
 }
 
