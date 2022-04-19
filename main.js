@@ -19,15 +19,29 @@ function canvasHeightCalculation() {
 
 
 // Player
+let playerImageAni = 1;
 class Hitbox {
     constructor(x, y, velocity) {
         this.xPosition = x;
         this.yPosition = y;
         this.velocity = velocity;
         this.circleRadius = 4;
-    }
 
+    }
+    
     draw() {
+        
+        const playerImg = new Image();
+        if (this.velocity.x == 0) {
+            if (playerImageAni > 4) {
+                playerImageAni = 1;
+            } 
+            playerImg.src = `TH_EoSD_Reimu_${playerImageAni}.png`;
+            
+            console.log(playerImageAni)
+        }
+        canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+        
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 2, 0, Math.PI * 2, false);
         canvasContext.fillStyle = 'white';
@@ -173,7 +187,7 @@ function animation() {
 
     // Render
     animationFrame = requestAnimationFrame(animation)
-    canvasContext.fillStyle = 'rgba(20,20,20,0.25)'
+    canvasContext.fillStyle = 'rgba(20,20,20,1)'
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
 
     // Player
@@ -387,3 +401,14 @@ onkeydown = onkeyup = function(event) {
     // console.log(event.code)
     // console.log(keyArray)
 }
+
+
+
+// new
+
+uiGMSelect(1,false)
+
+setInterval(() => {
+    
+    playerImageAni++;
+}, 75);
