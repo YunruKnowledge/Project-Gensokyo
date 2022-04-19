@@ -490,8 +490,3 @@ onkeydown = onkeyup = function(event) {
     // console.log(event.code)
     console.log(keyArray)
 }
-
-
-
-// new
-// uiGMSelect(1,false)
