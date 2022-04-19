@@ -36,8 +36,11 @@ class Hitbox {
         const playerImg = new Image();
         const playerSprite_Slow = new Image();
         playerSprite_Slow.src = `TH_UFO_Player_Slow.png`;
+
+        /* Movement sprite change */
         if (this.velocity.x == 0) {
             playerImg.src = `TH_HSiFS_Reimu_Idle_Frame_${animationFrame_player_idle}.png`;
+            // Up and Down
             if (this.velocity.y != 0 && this.velocity.y <= 2 && this.velocity.y >= -2) {
                 canvasContext.save()
                 canvasContext.globalAlpha = 0.5;
@@ -50,6 +53,7 @@ class Hitbox {
                 canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
                 canvasContext.restore()
             }
+            // Standing still
             else {
                 canvasContext.drawImage(playerImg, 
                     this.xPosition - (playerImg.width * 2) / 2, 
@@ -96,6 +100,7 @@ class Hitbox {
                 playerImg.height * 3)
         }
 
+        // Render hitbox
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 2, 0, Math.PI * 2, false);
         canvasContext.fillStyle = 'white';
@@ -105,6 +110,8 @@ class Hitbox {
         canvasContext.fillStyle = 'salmon';
         canvasContext.fill()
     }
+
+    // Update the position of hitbox.
     update() {
         this.draw()
         
@@ -128,6 +135,22 @@ class Hitbox {
 }
 const playerVelocity = {x:0, y:0} 
 const playerHitbox = new Hitbox(canvas.width / 2,canvas.height / 2, playerVelocity)
+const playerSpriteAnimation = setInterval(() => {
+    animationFrame_player_idle++;
+    if (animationFrame_player_idle > 8) {
+        animationFrame_player_idle = 1;
+    } 
+    animationFrame_player_left++;
+    if (animationFrame_player_left > 8) {
+        animationFrame_player_left = 5;
+    } 
+    animationFrame_player_right++;
+    if (animationFrame_player_right > 8) {
+        animationFrame_player_right = 5;
+    } 
+
+    // console.log(animationFrame_player_right)
+}, 75);
 
 
 // Bullets
@@ -314,7 +337,7 @@ function animation() {
                 // Audio
                 playAudioExplosion()
                 
-                //particles
+                // Particles
                 for (let i = 0; i < 24; i++) {
                     particleArray.push(new Particle(
                         projectile.xPosition, 
@@ -376,13 +399,20 @@ function resetGame() {
 
 // Shooting 
 function playerShoot(event) {
-    const angle = Math.atan2(event.clientY - playerHitbox.yPosition, event.clientX - playerHitbox.xPosition);
+    const angle = (Math.PI/2)*-1;
     const velocity = {
         x: Math.cos(angle),
         y: Math.sin(angle)
     }
-    playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))
-
+    setTimeout(() => {
+        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
+        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
+        if (scoreNumber > 10000) {
+            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
+            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
+        }
+    }, 0);
+    
     // Audio
     playAudioAttack()
 }
@@ -397,9 +427,17 @@ addEventListener('mousemove', (event)=> {
 })
 
 // Bullets
+let gamemode_shmup_auto_shooting;
 onmousedown = function(event) {    
-    if (gameStarted === true) {
-        playerShoot(event)
+    if (gameStarted === true) {           
+        gamemode_shmup_auto_shooting = setInterval(() => {playerShoot(mousePosition)}, 120);
+ 
+    }
+}
+onmouseup = function(event) {    
+    if (gameStarted === true) {          
+        clearInterval(gamemode_shmup_auto_shooting, 1)
+        
     }
 }
 
@@ -414,15 +452,6 @@ onkeydown = onkeyup = function(event) {
         playerHitbox.velocity.y = 0;
         playerHitbox.velocity.x = 0;
         keylistener_shift = false;
-    }
-
-    if (keyArray['Space']) { 
-        if (gameStarted === true) {
-            playerShoot(mousePosition)
-        }
-    }
-    else if (!keyArray['Space']) {
-        // Nothing
     }
 
     if (keyArray['ShiftLeft']) {
@@ -458,27 +487,10 @@ onkeydown = onkeyup = function(event) {
     }
     
     // console.log(event.code)
-    // console.log(keyArray)
+    console.log(keyArray)
 }
 
 
 
 // new
 // uiGMSelect(1,false)
-setInterval(() => {
-    animationFrame_player_idle++;
-    if (animationFrame_player_idle > 8) {
-        animationFrame_player_idle = 1;
-    } 
-    animationFrame_player_left++;
-    if (animationFrame_player_left > 8) {
-        animationFrame_player_left = 5;
-    } 
-    animationFrame_player_right++;
-    if (animationFrame_player_right > 8) {
-        animationFrame_player_right = 5;
-    } 
-
-    // console.log(animationFrame_player_right)
-    // console.log(ease_frames)
-}, 75);
