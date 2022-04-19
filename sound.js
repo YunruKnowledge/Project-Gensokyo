@@ -55,7 +55,7 @@ function playAudioAttack() {
     audioArray.push(new Audio())
     audioArray.forEach((audio, audioIndex)=> {
         audio.src = `tan0${parseInt(attackAudioRandom)}.wav`;
-        audio.volume = 0.2 * (gameRule_SFX_Vol / 100)
+        audio.volume = 0.15 * (gameRule_SFX_Vol / 100)
         audio.play()
         audioArray.splice(audioIndex, 1)
     })
@@ -66,7 +66,7 @@ function playAudioExplosion() {
     audioArray.push(new Audio())
     audioArray.forEach((audio, audioIndex)=> {
         audio.src = `tan00.wav`;
-        audio.volume = 0.25 * (gameRule_SFX_Vol / 100)
+        audio.volume = 0.15 * (gameRule_SFX_Vol / 100)
         audio.play()
         audioArray.splice(audioIndex, 1)
     });
