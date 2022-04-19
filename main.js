@@ -19,29 +19,83 @@ function canvasHeightCalculation() {
 
 
 // Player
-let playerImageAni = 1;
+let animationFrame_player_idle = 1;
+let animationFrame_player_left = 1;
+let animationFrame_player_right = 1;
+let keylistener_shift = false;
 class Hitbox {
     constructor(x, y, velocity) {
         this.xPosition = x;
         this.yPosition = y;
         this.velocity = velocity;
-        this.circleRadius = 4;
+        this.circleRadius = 3;
 
     }
     
     draw() {
-        
         const playerImg = new Image();
+        const playerSprite_Slow = new Image();
+        playerSprite_Slow.src = `TH_UFO_Player_Slow.png`;
         if (this.velocity.x == 0) {
-            if (playerImageAni > 4) {
-                playerImageAni = 1;
-            } 
-            playerImg.src = `TH_EoSD_Reimu_${playerImageAni}.png`;
-            
-            console.log(playerImageAni)
+            playerImg.src = `TH_HSiFS_Reimu_Idle_Frame_${animationFrame_player_idle}.png`;
+            if (this.velocity.y != 0 && this.velocity.y <= 2 && this.velocity.y >= -2) {
+                canvasContext.save()
+                canvasContext.globalAlpha = 0.5;
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                canvasContext.restore()
+            }
+            else if (keylistener_shift == true) {
+                canvasContext.save()
+                canvasContext.globalAlpha = 0.5;
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                canvasContext.restore()
+            }
+            else {
+                canvasContext.drawImage(playerImg, 
+                    this.xPosition - (playerImg.width * 2) / 2, 
+                    this.yPosition - (playerImg.height * 2) / 2, 
+                    playerImg.width *2, 
+                    playerImg.height *2)
+            }
         }
-        canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-        
+
+        // Left
+        if (this.velocity.x < 0) {
+            playerImg.src = `TH_HSiFS_Reimu_Left_Frame_${animationFrame_player_left}.png`;
+            if (this.velocity.x < 0 && this.velocity.x >= -2) {
+                canvasContext.save()
+                canvasContext.globalAlpha = 0.5;
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                canvasContext.restore()
+            }
+            else {
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+            }
+        }
+
+        // Right
+        if (this.velocity.x > 0) {
+            playerImg.src = `TH_HSiFS_Reimu_Right_Frame_${animationFrame_player_right}.png`;
+            if (this.velocity.x > 0 && this.velocity.x <= 2) {
+                canvasContext.save()
+                canvasContext.globalAlpha = 0.5;
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                canvasContext.restore()
+            }
+            else {
+                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+            }
+        }
+
+        // Shift
+        if (keylistener_shift == true) {
+            canvasContext.drawImage(playerSprite_Slow, 
+                this.xPosition - (playerImg.width * 4.5) / 2, 
+                this.yPosition - (playerImg.height * 3) / 2, 
+                playerImg.width * 4.5, 
+                playerImg.height * 3)
+        }
+
         canvasContext.beginPath();
         canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 2, 0, Math.PI * 2, false);
         canvasContext.fillStyle = 'white';
@@ -359,6 +413,7 @@ onkeydown = onkeyup = function(event) {
     if (!keyArray['Quote']) {
         playerHitbox.velocity.y = 0;
         playerHitbox.velocity.x = 0;
+        keylistener_shift = false;
     }
 
     if (keyArray['Space']) { 
@@ -368,6 +423,10 @@ onkeydown = onkeyup = function(event) {
     }
     else if (!keyArray['Space']) {
         // Nothing
+    }
+
+    if (keyArray['ShiftLeft']) {
+        keylistener_shift = true;
     }
 
     if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
@@ -405,10 +464,21 @@ onkeydown = onkeyup = function(event) {
 
 
 // new
-
-uiGMSelect(1,false)
-
+// uiGMSelect(1,false)
 setInterval(() => {
-    
-    playerImageAni++;
+    animationFrame_player_idle++;
+    if (animationFrame_player_idle > 8) {
+        animationFrame_player_idle = 1;
+    } 
+    animationFrame_player_left++;
+    if (animationFrame_player_left > 8) {
+        animationFrame_player_left = 5;
+    } 
+    animationFrame_player_right++;
+    if (animationFrame_player_right > 8) {
+        animationFrame_player_right = 5;
+    } 
+
+    // console.log(animationFrame_player_right)
+    // console.log(ease_frames)
 }, 75);
