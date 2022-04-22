@@ -22,7 +22,6 @@ function canvasHeightCalculation() {
 let animationFrame_player_idle = 1;
 let animationFrame_player_left = 1;
 let animationFrame_player_right = 1;
-let keylistener_shift = false;
 class Hitbox {
     constructor(x, y, velocity) {
         this.xPosition = x;
@@ -33,82 +32,84 @@ class Hitbox {
     }
     
     draw() {
-        const playerImg = new Image();
-        const playerSprite_Slow = new Image();
-        playerSprite_Slow.src = `TH_UFO_Player_Slow.png`;
-
-        /* Movement sprite change */
-        if (this.velocity.x == 0) {
-            playerImg.src = `TH_HSiFS_Reimu_Idle_Frame_${animationFrame_player_idle}.png`;
-            // Up and Down
-            if (this.velocity.y != 0 && this.velocity.y <= 2 && this.velocity.y >= -2) {
-                canvasContext.save()
-                canvasContext.globalAlpha = 0.5;
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-                canvasContext.restore()
+        if (gameType == 4) {
+            const playerImg = new Image();
+            const playerSprite_Slow = new Image();
+            playerSprite_Slow.src = `TH_UFO_Player_Slow.png`;
+            
+            /* Movement sprite change */
+            if (this.velocity.x == 0) {
+                playerImg.src = `TH_HSiFS_Reimu_Idle_Frame_${animationFrame_player_idle}.png`;
+                // Up and Down
+                if (this.velocity.y != 0 && this.velocity.y <= 2 && this.velocity.y >= -2) {
+                    canvasContext.save()
+                    canvasContext.globalAlpha = 0.5;
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                    canvasContext.restore()
+                }
+                else if (keylistener_shift == true) {
+                    canvasContext.save()
+                    canvasContext.globalAlpha = 0.5;
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                    canvasContext.restore()
+                }
+                // Standing still
+                else {
+                    canvasContext.drawImage(playerImg, 
+                        this.xPosition - (playerImg.width * 2) / 2, 
+                        this.yPosition - (playerImg.height * 2) / 2, 
+                        playerImg.width *2, 
+                        playerImg.height *2)
+                    }
             }
-            else if (keylistener_shift == true) {
-                canvasContext.save()
-                canvasContext.globalAlpha = 0.5;
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-                canvasContext.restore()
+                
+            // Left
+            if (this.velocity.x < 0) {
+                playerImg.src = `TH_HSiFS_Reimu_Left_Frame_${animationFrame_player_left}.png`;
+                if (this.velocity.x < 0 && this.velocity.x >= -2) {
+                    canvasContext.save()
+                    canvasContext.globalAlpha = 0.5;
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                    canvasContext.restore()
+                }
+                else {
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                }
             }
-            // Standing still
-            else {
-                canvasContext.drawImage(playerImg, 
-                    this.xPosition - (playerImg.width * 2) / 2, 
-                    this.yPosition - (playerImg.height * 2) / 2, 
-                    playerImg.width *2, 
-                    playerImg.height *2)
+            
+            // Right
+            if (this.velocity.x > 0) {
+                playerImg.src = `TH_HSiFS_Reimu_Right_Frame_${animationFrame_player_right}.png`;
+                if (this.velocity.x > 0 && this.velocity.x <= 2) {
+                    canvasContext.save()
+                    canvasContext.globalAlpha = 0.5;
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                    canvasContext.restore()
+                }
+                else {
+                    canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+                }
+            }
+            
+            // Shift
+            if (keylistener_shift == true) {
+                canvasContext.drawImage(playerSprite_Slow, 
+                    this.xPosition - (playerImg.width * 4.5) / 2, 
+                    this.yPosition - (playerImg.height * 3) / 2, 
+                    playerImg.width * 4.5, 
+                    playerImg.height * 3)
             }
         }
-
-        // Left
-        if (this.velocity.x < 0) {
-            playerImg.src = `TH_HSiFS_Reimu_Left_Frame_${animationFrame_player_left}.png`;
-            if (this.velocity.x < 0 && this.velocity.x >= -2) {
-                canvasContext.save()
-                canvasContext.globalAlpha = 0.5;
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-                canvasContext.restore()
-            }
-            else {
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-            }
-        }
-
-        // Right
-        if (this.velocity.x > 0) {
-            playerImg.src = `TH_HSiFS_Reimu_Right_Frame_${animationFrame_player_right}.png`;
-            if (this.velocity.x > 0 && this.velocity.x <= 2) {
-                canvasContext.save()
-                canvasContext.globalAlpha = 0.5;
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-                canvasContext.restore()
-            }
-            else {
-                canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
-            }
-        }
-
-        // Shift
-        if (keylistener_shift == true) {
-            canvasContext.drawImage(playerSprite_Slow, 
-                this.xPosition - (playerImg.width * 4.5) / 2, 
-                this.yPosition - (playerImg.height * 3) / 2, 
-                playerImg.width * 4.5, 
-                playerImg.height * 3)
-        }
-
-        // Render hitbox
-        canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 8, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = 'white';
-        canvasContext.fill()
-        canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 6, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = 'salmon';
-        canvasContext.fill()
+            
+            // Render hitbox
+            canvasContext.beginPath();
+            canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 8, 0, Math.PI * 2, false);
+            canvasContext.fillStyle = 'white';
+            canvasContext.fill()
+            canvasContext.beginPath();
+            canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 6, 0, Math.PI * 2, false);
+            canvasContext.fillStyle = 'salmon';
+            canvasContext.fill()
     }
 
     // Update the position of hitbox.
@@ -204,7 +205,13 @@ class Enemy {
 }
 let enemyArray = []
 function enemySpawn() {
-    const radius = Math.random() * (6 - 2) + 6;
+    let radius;
+    if (gameType == 4) {
+        radius = Math.random() * (6 - 2) + 6;
+    }
+    else {
+        radius = Math.random() * (14 - 10) + 14;
+    }
     const x = Math.random() * canvas.width;
     const y = -radius;
     const color = `hsl(${Math.random()*360}, 75% , 75%)`;
@@ -264,7 +271,12 @@ function animation() {
 
     // Render
     animationFrame = requestAnimationFrame(animation)
-    canvasContext.fillStyle = 'rgba(20,20,20,1)'
+    if (gameType == 4) {
+        canvasContext.fillStyle = 'rgba(20,20,20,1)'
+    }
+    else {
+        canvasContext.fillStyle = 'rgba(20,20,20,0.25)'
+    }
     canvasContext.fillRect(0, 0, canvas.width, canvas.height)
 
     // Player
@@ -312,29 +324,25 @@ function animation() {
         // Collision for player - Death
         if (collisionDistance - enemy.circleRadius - playerHitbox.circleRadius < 1) {
             setTimeout(() => {
-                playerDeath()
-
                 // Audio
                 playAudioPlayerDeath()
                 deaths++; // Could be used later as a death counter
 
-                if (deaths >= 3) {
-                    deaths = 0
-                    
-                    cancelAnimationFrame(animationFrame)
-                    
-                    gameStarted = false;
-                    clearInterval(enemyInterval, 100)
+                if (gameType == 4) {
+                    playerDeath()
 
-                    
-                    // UI
-                    scoreEndCounter.innerHTML = parseInt(scoreNumber);
-                    scoreCounterElement.style.display = 'none';
-                    
-                    uiDeathUI()
-                    
-                    clearInterval(gamemode_shmup_auto_shooting, 1)
+                    if (deaths >= 3) {
+                        deaths = 0
+
+                        gameEnd()                        
+                    }
                 }
+                else {
+                    deaths = 0
+                    gameEnd()
+                }
+                    
+
             }, 0);
         }; 
         
@@ -369,6 +377,24 @@ function animation() {
     })
 }
 
+
+function gameEnd() {
+    cancelAnimationFrame(animationFrame)
+    
+    gameStarted = false;
+    clearInterval(enemyInterval, 100)
+
+    
+    // UI
+    scoreEndCounter.innerHTML = parseInt(scoreNumber);
+    scoreCounterElement.style.display = 'none';
+    
+    uiDeathUI()
+
+    clearInterval(gamemode_shmup_auto_shooting, 1)
+}
+
+
 function playerDeath() {
     enemyArray = [];
     particleArray = [];
@@ -376,6 +402,8 @@ function playerDeath() {
     playerHitbox.xPosition = canvas.width/2;
     playerHitbox.yPosition = canvas.height/1.25;
 }
+
+
 // Restart game
 var gameDifficulty = 2;
 var gameType = 1;
@@ -414,19 +442,31 @@ function resetGame() {
 
 // Shooting 
 function playerShoot(event) {
-    const angle = (Math.PI/2)*-1;
-    const velocity = {
-        x: Math.cos(angle),
-        y: Math.sin(angle)
-    }
-    setTimeout(() => {
-        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
-        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
-        if (scoreNumber > 50) {
-            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
-            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
+    if (gameType == 4) {
+
+        const angle = (Math.PI/2)*-1;
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
         }
-    }, 0);
+        setTimeout(() => {
+            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
+            playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
+            if (scoreNumber > 50) {
+                playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
+                playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
+            }
+        }, 0);
+    }
+
+    else {
+        const angle = Math.atan2(event.clientY - playerHitbox.yPosition, event.clientX - playerHitbox.xPosition);
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition, playerHitbox.yPosition, 12, 'salmon', velocity))        
+    }
     
     // Audio
     playAudioAttack()
@@ -456,6 +496,7 @@ onmouseup = function(event) {
 }
 
 // Keyboard/Movement
+let keylistener_shift = false;
 let keyArray = [];
 onkeydown = onkeyup = function(event) {
     event = event;
@@ -470,6 +511,15 @@ onkeydown = onkeyup = function(event) {
 
     if (keyArray['ShiftLeft']) {
         keylistener_shift = true;
+    }
+
+    if (keyArray['Space']) { 
+        if (gameStarted === true && gameType == 1) {
+            playerShoot(mousePosition)
+        }
+    }
+    else if (!keyArray['Space']) {
+        // Nothing
     }
 
     if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
@@ -501,5 +551,5 @@ onkeydown = onkeyup = function(event) {
     }
     
     // console.log(event.code)
-    console.log(keyArray)
+    // console.log(keyArray)
 }
