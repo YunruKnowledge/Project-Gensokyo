@@ -100,16 +100,16 @@ class Hitbox {
                     playerImg.height * 3)
             }
         }
-            
-            // Render hitbox
-            canvasContext.beginPath();
-            canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 8, 0, Math.PI * 2, false);
-            canvasContext.fillStyle = 'white';
-            canvasContext.fill()
-            canvasContext.beginPath();
-            canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 6, 0, Math.PI * 2, false);
-            canvasContext.fillStyle = 'salmon';
-            canvasContext.fill()
+        
+        // Render hitbox
+        canvasContext.beginPath();
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 8, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = 'white';
+        canvasContext.fill()
+        canvasContext.beginPath();
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 6, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = 'salmon';
+        canvasContext.fill()
     }
 
     // Update the position of hitbox.
@@ -149,8 +149,6 @@ const playerSpriteAnimation = setInterval(() => {
     if (animationFrame_player_right > 8) {
         animationFrame_player_right = 5;
     } 
-
-    // console.log(animationFrame_player_right)
 }, 75);
 
 
@@ -227,13 +225,14 @@ function enemySpawn() {
 
 // Particles
 class Particle {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color, velocity, time) {
         this.xPosition = x;
         this.yPosition = y;
         this.circleRadius = radius;
         this.color = color;
         this.velocity = velocity; 
         this.alpha = 0.5;
+        this.alpha_reduce = time;
     }
     drawParticle() {
         canvasContext.save()
@@ -248,7 +247,7 @@ class Particle {
         this.drawParticle()
         this.xPosition = this.xPosition + this.velocity.x;
         this.yPosition = this.yPosition + this.velocity.y;
-        this.alpha -= 0.01;
+        this.alpha -= this.alpha_reduce;
         this.velocity.x *= 0.95;
         this.velocity.y *= 0.95;
     }
@@ -326,9 +325,19 @@ function animation() {
             setTimeout(() => {
                 // Audio
                 playAudioPlayerDeath()
-                deaths++; // Could be used later as a death counter
+                deaths++;
 
                 if (gameType == 4) {
+                    // Particles
+                    for (let i = 0; i < 24; i++) {
+                        particleArray.push(new Particle(
+                            playerHitbox.xPosition, 
+                            playerHitbox.yPosition, 
+                            Math.random() * 4, 
+                            'salmon', 
+                            {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                            0.0005));
+                    }
                     playerDeath()
 
                     if (deaths >= 3) {
@@ -361,7 +370,8 @@ function animation() {
                         projectile.yPosition, 
                         Math.random() * 4, 
                         enemy.color, 
-                        {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)}));
+                        {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                        0.01));
                 }
 
                 // Removal of projectile and enemy
@@ -397,7 +407,6 @@ function gameEnd() {
 
 function playerDeath() {
     enemyArray = [];
-    particleArray = [];
     playerProjectileArray = [];
     playerHitbox.xPosition = canvas.width/2;
     playerHitbox.yPosition = canvas.height/1.25;
