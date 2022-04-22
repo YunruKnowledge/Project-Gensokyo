@@ -28,7 +28,7 @@ class Hitbox {
         this.xPosition = x;
         this.yPosition = y;
         this.velocity = velocity;
-        this.circleRadius = 3;
+        this.circleRadius = 1;
 
     }
     
@@ -102,11 +102,11 @@ class Hitbox {
 
         // Render hitbox
         canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 2, 0, Math.PI * 2, false);
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 8, 0, Math.PI * 2, false);
         canvasContext.fillStyle = 'white';
         canvasContext.fill()
         canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 1.5, 0, Math.PI * 2, false);
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius * 6, 0, Math.PI * 2, false);
         canvasContext.fillStyle = 'salmon';
         canvasContext.fill()
     }
@@ -204,7 +204,7 @@ class Enemy {
 }
 let enemyArray = []
 function enemySpawn() {
-    const radius = Math.random() * (14 - 10) + 14;
+    const radius = Math.random() * (6 - 2) + 6;
     const x = Math.random() * canvas.width;
     const y = -radius;
     const color = `hsl(${Math.random()*360}, 75% , 75%)`;
@@ -312,22 +312,29 @@ function animation() {
         // Collision for player - Death
         if (collisionDistance - enemy.circleRadius - playerHitbox.circleRadius < 1) {
             setTimeout(() => {
-                cancelAnimationFrame(animationFrame)
-
-                gameStarted = false;
-                clearInterval(enemyInterval, 100)
-                deaths++; // Could be used later as a death counter
+                playerDeath()
 
                 // Audio
                 playAudioPlayerDeath()
-                
-                // UI
-                scoreEndCounter.innerHTML = parseInt(scoreNumber);
-                scoreCounterElement.style.display = 'none';
+                deaths++; // Could be used later as a death counter
 
-                uiDeathUI()
-                
-                clearInterval(gamemode_shmup_auto_shooting, 1)
+                if (deaths >= 3) {
+                    deaths = 0
+                    
+                    cancelAnimationFrame(animationFrame)
+                    
+                    gameStarted = false;
+                    clearInterval(enemyInterval, 100)
+
+                    
+                    // UI
+                    scoreEndCounter.innerHTML = parseInt(scoreNumber);
+                    scoreCounterElement.style.display = 'none';
+                    
+                    uiDeathUI()
+                    
+                    clearInterval(gamemode_shmup_auto_shooting, 1)
+                }
             }, 0);
         }; 
         
@@ -362,7 +369,13 @@ function animation() {
     })
 }
 
-
+function playerDeath() {
+    enemyArray = [];
+    particleArray = [];
+    playerProjectileArray = [];
+    playerHitbox.xPosition = canvas.width/2;
+    playerHitbox.yPosition = canvas.height/1.25;
+}
 // Restart game
 var gameDifficulty = 2;
 var gameType = 1;
@@ -409,7 +422,7 @@ function playerShoot(event) {
     setTimeout(() => {
         playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
         playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 14, playerHitbox.yPosition - 36, 12, 'salmon', velocity))
-        if (scoreNumber > 10000) {
+        if (scoreNumber > 50) {
             playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition - 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
             playerProjectileArray.push(new PlayerProjectile(playerHitbox.xPosition + 42, playerHitbox.yPosition - 8, 12, 'salmon', velocity))
         }
