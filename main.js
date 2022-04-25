@@ -2,6 +2,8 @@
 
 
 
+"use strict";
+
 // Canvas body
 const canvas = document.querySelector('canvas');
 const canvasContext = canvas.getContext('2d');
@@ -342,7 +344,6 @@ function animation() {
 
                     if (deaths >= 3) {
                         deaths = 0
-
                         gameEnd()                        
                     }
                 }
@@ -418,6 +419,7 @@ var gameDifficulty = 2;
 var gameType = 1;
 var gamePraticeMode = false;
 let gameStarted = false;
+let enemyInterval;
 function restartGame() {
     animation()
 

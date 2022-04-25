@@ -4,6 +4,9 @@
 
 // Every function must have "ui" before the actual name. Same goes for every variable outside a function.
 
+"use strict";
+
+
 // Set to _true_ when UI is in transition. Set to _false_ after the transition.
 let uiLock = false;
 
