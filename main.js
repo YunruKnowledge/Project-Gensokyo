@@ -225,6 +225,44 @@ function enemySpawn() {
 }
 
 
+// Enemy - gametype 4
+class Fairy {
+    constructor(x, y, radius, color, velocity) {
+        this.xPosition = x;
+        this.yPosition = y;
+        this.circleRadius = radius;
+        this.color = color;
+        this.velocity = velocity; 
+    }
+    drawEnemy() {
+        canvasContext.beginPath();
+        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
+        canvasContext.fillStyle = this.color;
+        canvasContext.fill()
+    }
+    UpdateAnimation() {
+        this.drawEnemy()
+        this.xPosition = this.xPosition + this.velocity.x;
+        this.yPosition = this.yPosition + this.velocity.y;
+    }
+}
+let enemyFairyArray = []
+function enemyFairySpawn() {
+    let radius = Math.random() * (14 - 10) + 14;
+    const x = Math.random() * canvas.width;
+    const y = -radius;
+    // const color = `hsl(${Math.random()*360}, 75% , 75%)`;
+    const color = `blue`;
+    const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
+    const randomNumGen = (Math.random() * 8) + 2;
+    const velocity = {
+        x: Math.cos(angle) * randomNumGen,
+        y: Math.sin(angle) * randomNumGen
+    };
+    enemyFairyArray.push(new Fairy(x, y, radius, color, velocity));
+}
+
+
 // Particles
 class Particle {
     constructor(x, y, radius, color, velocity, time) {
@@ -308,7 +346,7 @@ function animation() {
         }
     })
 
-    // Enemies
+    // Enemies - If gametype 4, enemy is just projectiles.
     enemyArray.forEach((enemy, enemyIndex)=> {
         enemy.UpdateAnimation()
         
@@ -360,11 +398,9 @@ function animation() {
         
         // Collision for projectiles
         playerProjectileArray.forEach((projectile, projectileIndex)=> {
-            if (gameType == 4) {
-                // Content later when actual enemies are added.
-            }
-            else if (gameType == 2) {
+            if (gameType == 2 || gameType == 4) {
                 // No hit register since player can't shoot.
+                // No hit register since you cant shoot other projectiles.
             }
             // gametype 1 & 3
             else {
@@ -399,6 +435,76 @@ function animation() {
             }; 
         })
     })
+    
+    // Enemy - gametype 4
+    if (gameType == 4) {
+        enemyFairyArray.forEach((enemyFairy, enemyFairyIndex) => {
+            enemyFairy.UpdateAnimation()
+
+            // Collision for projectiles
+            playerProjectileArray.forEach((projectile, projectileIndex)=> {
+                const collisionDistance = Math.hypot(projectile.xPosition - enemyFairy.xPosition, projectile.yPosition - enemyFairy.yPosition)
+                if (collisionDistance - enemyFairy.circleRadius - projectile.circleRadius < 1) {
+
+                    // Audio
+                    playAudioExplosion()
+
+                    // Particles
+                    if (gameRule_Particles == true) {
+                        for (let i = 0; i < 24; i++) {
+                            particleArray.push(new Particle(
+                                projectile.xPosition, 
+                                projectile.yPosition, 
+                                Math.random() * 4, 
+                                enemyFairy.color, 
+                                {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                                0.01));
+                        }
+                    }
+
+                    // Removal of projectile and enemy
+                    setTimeout(() => {
+                        enemyFairyArray.splice(enemyFairyIndex, 1)
+                        playerProjectileArray.splice(projectileIndex, 1)
+                    }, 0);
+
+                    scoreNumber += (10*enemyFairy.circleRadius);
+                    scoreCounter.innerHTML = parseInt(scoreNumber);
+                }
+            });
+        
+            // Collision for player - Death
+            const collisionDistance = Math.hypot(playerHitbox.xPosition - enemyFairy.xPosition, playerHitbox.yPosition - enemyFairy.yPosition)
+            if (collisionDistance - enemyFairy.circleRadius - playerHitbox.circleRadius < 1) {
+                setTimeout(() => {
+                    // Audio
+                    playAudioPlayerDeath()
+                    
+                    // Particles
+                    if (gameRule_Particles == true) {
+                        for (let i = 0; i < 24; i++) {
+                            particleArray.push(new Particle(
+                                playerHitbox.xPosition, 
+                                playerHitbox.yPosition, 
+                                Math.random() * 4, 
+                                'salmon', 
+                                {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                                0.0005));
+                            }
+                    }
+                    deaths++;
+                    playerDeath()
+
+                    if (deaths >= 3) {
+                        deaths = 0
+                        gameEnd()                        
+                    }; 
+                }, 0);
+            }; 
+            
+        });
+
+    }
 }
 
 
@@ -407,7 +513,8 @@ function gameEnd() {
     
     gameStarted = false;
     clearInterval(enemyInterval, 100)
-
+    clearInterval(enemyFairyInterval, 100)
+    
     
     // UI
     scoreEndCounter.innerHTML = parseInt(scoreNumber);
@@ -421,6 +528,7 @@ function gameEnd() {
 
 function playerDeath() {
     enemyArray = [];
+    enemyFairyArray = [];
     playerProjectileArray = [];
     playerHitbox.xPosition = canvas.width/2;
     playerHitbox.yPosition = canvas.height/1.25;
@@ -433,6 +541,7 @@ var gameType = 1;
 var gamePraticeMode = false;
 let gameStarted = false;
 let enemyInterval;
+let enemyFairyInterval;
 function restartGame() {
     animation()
 
@@ -440,6 +549,12 @@ function restartGame() {
         enemyInterval = setInterval(() => {
             enemySpawn()
         }, 500 / (gameDifficulty * gameDifficulty * 2) );
+
+        if (gameType == 4) {
+            enemyFairyInterval = setInterval(() => {
+                enemyFairySpawn()
+            }, 1000 / (gameDifficulty * gameDifficulty * 2) );
+        }
     }, 2000);
     
     // UI
@@ -453,6 +568,7 @@ function restartGame() {
 // Resets game stats and positions
 function resetGame() {
     enemyArray = [];
+    enemyFairyArray = [];
     particleArray = [];
     playerProjectileArray = [];
     scoreNumber = 0;
