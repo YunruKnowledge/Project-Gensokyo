@@ -331,14 +331,16 @@ function animation() {
 
                 if (gameType == 4) {
                     // Particles
-                    for (let i = 0; i < 24; i++) {
-                        particleArray.push(new Particle(
-                            playerHitbox.xPosition, 
-                            playerHitbox.yPosition, 
-                            Math.random() * 4, 
-                            'salmon', 
-                            {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
-                            0.0005));
+                    if (gameRule_Particles == true) {
+                        for (let i = 0; i < 24; i++) {
+                            particleArray.push(new Particle(
+                                playerHitbox.xPosition, 
+                                playerHitbox.yPosition, 
+                                Math.random() * 4, 
+                                'salmon', 
+                                {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                                0.0005));
+                        }
                     }
                     playerDeath()
 
@@ -365,16 +367,18 @@ function animation() {
                 playAudioExplosion()
                 
                 // Particles
-                for (let i = 0; i < 24; i++) {
-                    particleArray.push(new Particle(
-                        projectile.xPosition, 
-                        projectile.yPosition, 
-                        Math.random() * 4, 
-                        enemy.color, 
-                        {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
-                        0.01));
+                if (gameRule_Particles == true) {
+                    for (let i = 0; i < 24; i++) {
+                        particleArray.push(new Particle(
+                            projectile.xPosition, 
+                            projectile.yPosition, 
+                            Math.random() * 4, 
+                            enemy.color, 
+                            {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                            0.01));
+                    }
                 }
-
+                        
                 // Removal of projectile and enemy
                 setTimeout(() => {
                     enemyArray.splice(enemyIndex, 1)
