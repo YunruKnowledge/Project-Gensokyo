@@ -360,33 +360,42 @@ function animation() {
         
         // Collision for projectiles
         playerProjectileArray.forEach((projectile, projectileIndex)=> {
-            const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
-            if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
-
-                // Audio
-                playAudioExplosion()
-                
-                // Particles
-                if (gameRule_Particles == true) {
-                    for (let i = 0; i < 24; i++) {
-                        particleArray.push(new Particle(
-                            projectile.xPosition, 
-                            projectile.yPosition, 
-                            Math.random() * 4, 
-                            enemy.color, 
-                            {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
-                            0.01));
+            if (gameType == 4) {
+                // Content later when actual enemies are added.
+            }
+            else if (gameType == 2) {
+                // No hit register since player can't shoot.
+            }
+            // gametype 1 & 3
+            else {
+                const collisionDistance = Math.hypot(projectile.xPosition - enemy.xPosition, projectile.yPosition - enemy.yPosition)
+                if (collisionDistance - enemy.circleRadius - projectile.circleRadius < 1) {
+                    
+                    // Audio
+                    playAudioExplosion()
+                    
+                    // Particles
+                    if (gameRule_Particles == true) {
+                        for (let i = 0; i < 24; i++) {
+                            particleArray.push(new Particle(
+                                projectile.xPosition, 
+                                projectile.yPosition, 
+                                Math.random() * 4, 
+                                enemy.color, 
+                                {x: (Math.random() -0.5) * (Math.random() * 30), y:(Math.random() -0.5) * (Math.random() * 30)},
+                                0.01));
+                        }
                     }
+                    
+                    // Removal of projectile and enemy
+                    setTimeout(() => {
+                        enemyArray.splice(enemyIndex, 1)
+                        playerProjectileArray.splice(projectileIndex, 1)
+                    }, 0);
+                    
+                    scoreNumber += (10*enemy.circleRadius);
+                    scoreCounter.innerHTML = parseInt(scoreNumber);
                 }
-                        
-                // Removal of projectile and enemy
-                setTimeout(() => {
-                    enemyArray.splice(enemyIndex, 1)
-                    playerProjectileArray.splice(projectileIndex, 1)
-                }, 0);
-
-                scoreNumber += (10*enemy.circleRadius);
-                scoreCounter.innerHTML = parseInt(scoreNumber);
             }; 
         })
     })
