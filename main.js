@@ -226,19 +226,20 @@ function enemySpawn() {
 
 
 // Enemy - gametype 4
+let animationFrame_enemeFairy_idle = 1;
 class Fairy {
     constructor(x, y, radius, color, velocity) {
         this.xPosition = x;
         this.yPosition = y;
         this.circleRadius = radius;
-        this.color = color;
+        this.color = color; // Now it's the color of death particles
         this.velocity = velocity; 
     }
     drawEnemy() {
-        canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = this.color;
-        canvasContext.fill()
+        const playerImg = new Image();
+        playerImg.src = `TH_UFO_Fairy_Idle_Frame_${animationFrame_enemeFairy_idle}.png`;
+        canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+
     }
     UpdateAnimation() {
         this.drawEnemy()
@@ -246,13 +247,19 @@ class Fairy {
         this.yPosition = this.yPosition + this.velocity.y;
     }
 }
+const enemyFairySpriteAnimation = setInterval(() => {
+    animationFrame_enemeFairy_idle++;
+    if (animationFrame_enemeFairy_idle > 4) {
+        animationFrame_enemeFairy_idle = 1;
+    }
+}, 75);
 let enemyFairyArray = []
 function enemyFairySpawn() {
     let radius = Math.random() * (14 - 10) + 14;
     const x = Math.random() * canvas.width;
     const y = -radius;
     // const color = `hsl(${Math.random()*360}, 75% , 75%)`;
-    const color = `blue`;
+    const color = `lightblue`;
     const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
     const randomNumGen = (Math.random() * 8) + 2;
     const velocity = {
