@@ -546,14 +546,18 @@ function restartGame() {
     animation()
 
     setTimeout(() => {
-        enemyInterval = setInterval(() => {
-            enemySpawn()
-        }, 500 / (gameDifficulty * gameDifficulty * 2) );
-
+        
         if (gameType == 4) {
+            enemyInterval;
+
             enemyFairyInterval = setInterval(() => {
                 enemyFairySpawn()
             }, 1000 / (gameDifficulty * gameDifficulty * 2) );
+        }
+        else {
+            enemyInterval = setInterval(() => {
+                enemySpawn()
+            }, 500 / (gameDifficulty * gameDifficulty * 2) );
         }
     }, 2000);
     
