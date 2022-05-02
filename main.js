@@ -68,7 +68,7 @@ class Hitbox {
             // Left
             if (this.velocity.x < 0) {
                 playerImg.src = `TH_HSiFS_Reimu_Left_Frame_${animationFrame_player_left}.png`;
-                if (this.velocity.x < 0 && this.velocity.x >= -2) {
+                if (this.velocity.x < 0 && this.velocity.x >= -4) {
                     canvasContext.save()
                     canvasContext.globalAlpha = 0.5;
                     canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
@@ -82,7 +82,7 @@ class Hitbox {
             // Right
             if (this.velocity.x > 0) {
                 playerImg.src = `TH_HSiFS_Reimu_Right_Frame_${animationFrame_player_right}.png`;
-                if (this.velocity.x > 0 && this.velocity.x <= 2) {
+                if (this.velocity.x > 0 && this.velocity.x <= 4) {
                     canvasContext.save()
                     canvasContext.globalAlpha = 0.5;
                     canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
@@ -162,6 +162,12 @@ class PlayerProjectile {
         this.circleRadius = radius;
         this.color = color;
         this.velocity = velocity; 
+        if (gameType == 4) {
+            this.bulletSpeed = 24
+        }
+        else {
+            this.bulletSpeed = 16
+        }
     }
     drawPlayerProjectile() {
         const playerProjectileGradient = canvasContext.createLinearGradient(0,0,0,720);
@@ -175,8 +181,8 @@ class PlayerProjectile {
     }
     UpdateAnimation() {
         this.drawPlayerProjectile()
-        this.xPosition = this.xPosition + this.velocity.x * 12;
-        this.yPosition = this.yPosition + this.velocity.y * 12;
+        this.xPosition = this.xPosition + this.velocity.x * this.bulletSpeed;
+        this.yPosition = this.yPosition + this.velocity.y * this.bulletSpeed;
     }
 }
 let playerProjectileArray = [];
@@ -199,8 +205,8 @@ class Enemy {
     }
     UpdateAnimation() {
         this.drawEnemy()
-        this.xPosition = this.xPosition + this.velocity.x;
-        this.yPosition = this.yPosition + this.velocity.y;
+        this.xPosition = this.xPosition + this.velocity.x * 1.5;
+        this.yPosition = this.yPosition + this.velocity.y * 1.5;
     }
 }
 let enemyArray = []
@@ -226,19 +232,20 @@ function enemySpawn() {
 
 
 // Enemy - gametype 4
+let animationFrame_enemeFairy_idle = 1;
 class Fairy {
     constructor(x, y, radius, color, velocity) {
         this.xPosition = x;
         this.yPosition = y;
         this.circleRadius = radius;
-        this.color = color;
+        this.color = color; // Now it's the color of death particles
         this.velocity = velocity; 
     }
     drawEnemy() {
-        canvasContext.beginPath();
-        canvasContext.arc(this.xPosition, this.yPosition, this.circleRadius, 0, Math.PI * 2, false);
-        canvasContext.fillStyle = this.color;
-        canvasContext.fill()
+        const playerImg = new Image();
+        playerImg.src = `TH_UFO_Fairy_Idle_Frame_${animationFrame_enemeFairy_idle}.png`;
+        canvasContext.drawImage(playerImg, this.xPosition - (playerImg.width * 2) / 2, this.yPosition - (playerImg.height * 2) / 2, playerImg.width *2, playerImg.height *2 )
+
     }
     UpdateAnimation() {
         this.drawEnemy()
@@ -246,13 +253,19 @@ class Fairy {
         this.yPosition = this.yPosition + this.velocity.y;
     }
 }
+const enemyFairySpriteAnimation = setInterval(() => {
+    animationFrame_enemeFairy_idle++;
+    if (animationFrame_enemeFairy_idle > 4) {
+        animationFrame_enemeFairy_idle = 1;
+    }
+}, 75);
 let enemyFairyArray = []
 function enemyFairySpawn() {
     let radius = Math.random() * (14 - 10) + 14;
     const x = Math.random() * canvas.width;
     const y = -radius;
     // const color = `hsl(${Math.random()*360}, 75% , 75%)`;
-    const color = `blue`;
+    const color = `lightblue`;
     const angle = Math.atan2(playerHitbox.yPosition - y, playerHitbox.xPosition - x);
     const randomNumGen = (Math.random() * 8) + 2;
     const velocity = {
@@ -306,10 +319,15 @@ const scoreCounterElement = document.querySelector('.scoreCounter');
 
 // Animations/Render
 let animationFrame;
+let fpsLimit = 60; // make this into a game option/settings later
+let animationInterval;
 function animation() {
 
     // Render
-    animationFrame = requestAnimationFrame(animation)
+    animationInterval = setTimeout(() => {
+        animationFrame = requestAnimationFrame(animation)
+    }, 1000 / fpsLimit);
+    
     if (gameType == 4) {
         canvasContext.fillStyle = 'rgba(20,20,20,1)'
     }
@@ -510,6 +528,7 @@ function animation() {
 
 function gameEnd() {
     cancelAnimationFrame(animationFrame)
+    clearInterval(animationInterval, 100)
     
     gameStarted = false;
     clearInterval(enemyInterval, 100)
@@ -667,31 +686,31 @@ onkeydown = onkeyup = function(event) {
     }
 
     if (keyArray['KeyD'] && keyArray['ShiftLeft']) {
-        playerHitbox.velocity.x = 2;
+        playerHitbox.velocity.x = 4;
     }
     else if (keyArray['KeyD']) {
-        playerHitbox.velocity.x = 4;
+        playerHitbox.velocity.x = 8;
     }
 
     if (keyArray['KeyW'] && keyArray['ShiftLeft']) {
-        playerHitbox.velocity.y = -2;
+        playerHitbox.velocity.y = -4;
     }
     else if (keyArray['KeyW']) {
-        playerHitbox.velocity.y = -4;
+        playerHitbox.velocity.y = -8;
     }
 
     if (keyArray['KeyA'] && keyArray['ShiftLeft']) {
-        playerHitbox.velocity.x = -2;
+        playerHitbox.velocity.x = -4;
     }
     else if (keyArray['KeyA']) {
-        playerHitbox.velocity.x = -4;
+        playerHitbox.velocity.x = -8;
     }
     
     if (keyArray['KeyS'] && keyArray['ShiftLeft']) {
-        playerHitbox.velocity.y = 2;
+        playerHitbox.velocity.y = 4;
     }
     else if (keyArray['KeyS']) {
-        playerHitbox.velocity.y = 4;
+        playerHitbox.velocity.y = 8;
     }
     
     // console.log(event.code)
