@@ -319,7 +319,7 @@ const scoreCounterElement = document.querySelector('.scoreCounter');
 
 // Animations/Render
 let animationFrame;
-let fpsLimit = 60; // make this into a game option/settings later
+let fpsLimit = 120; // make this into a game option/settings later
 let animationInterval;
 function animation() {
 
